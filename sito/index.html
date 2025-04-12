@@ -84,9 +84,11 @@
 
                 const uniqueDates = [...new Set(availability.map(item => item.date))];
                 const dateSelect = document.getElementById('date');
-                dateSelect.innerHTML = uniqueDates.map(date => `
-                    <option value="${date}">${date}</option>
-                `).join('');
+                if (dateSelect) {
+                    dateSelect.innerHTML = uniqueDates.map(date => `
+                        <option value="${date}">${date}</option>
+                    `).join('');
+                }
             } catch (err) {
                 console.error('Errore imprevisto durante il caricamento delle date:', err);
             }
@@ -119,51 +121,59 @@
                 const filteredTimes = availability.filter(item => !bookedTimes.includes(item.time));
 
                 const timeSelect = document.getElementById('time');
-                timeSelect.innerHTML = filteredTimes.map(item => `
-                    <option value="${item.time}">${item.time}</option>
-                `).join('');
-                timeSelect.disabled = false;
+                if (timeSelect) {
+                    timeSelect.innerHTML = filteredTimes.map(item => `
+                        <option value="${item.time}">${item.time}</option>
+                    `).join('');
+                    timeSelect.disabled = false;
+                }
             } catch (err) {
                 console.error('Errore imprevisto durante il caricamento degli orari:', err);
             }
         };
 
         // Aggiungi un listener per aggiornare gli orari quando cambia la data
-        document.getElementById('date').addEventListener('change', async (event) => {
-            const selectedDate = event.target.value;
-            await loadTimesForDate(selectedDate);
-        });
+        const dateSelect = document.getElementById('date');
+        if (dateSelect) {
+            dateSelect.addEventListener('change', async (event) => {
+                const selectedDate = event.target.value;
+                await loadTimesForDate(selectedDate);
+            });
+        }
 
         // Funzione per gestire la prenotazione
-        document.getElementById('booking-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
+        const bookingForm = document.getElementById('booking-form');
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
 
-            const client_name = document.getElementById('name').value; // Nome del cliente
-            const phone = document.getElementById('phone').value; // Telefono del cliente
-            const date = document.getElementById('date').value; // Data dell'appuntamento
-            const time = document.getElementById('time').value; // Orario dell'appuntamento
-            const notes = document.getElementById('notes').value; // Note del cliente
+                const client_name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const date = document.getElementById('date').value;
+                const time = document.getElementById('time').value;
+                const notes = document.getElementById('notes').value;
 
-            try {
-                const { error } = await supabaseClient
-                    .from('appointments')
-                    .insert([{ client_name, phone, date, time, notes }]);
+                try {
+                    const { error } = await supabaseClient
+                        .from('appointments')
+                        .insert([{ client_name, phone, date, time, notes }]);
 
-                if (error) {
-                    console.error('Errore durante la prenotazione:', error);
-                    document.getElementById('booking-message').textContent = 'Errore durante la prenotazione. Riprova.';
-                    return;
+                    if (error) {
+                        console.error('Errore durante la prenotazione:', error);
+                        document.getElementById('booking-message').textContent = 'Errore durante la prenotazione. Riprova.';
+                        return;
+                    }
+
+                    bookingForm.reset();
+                    document.getElementById('booking-message').textContent = 'Prenotazione effettuata con successo!';
+                    await loadDates();
+                    await loadTimesForDate(date);
+                } catch (err) {
+                    console.error('Errore imprevisto durante la prenotazione:', err);
+                    document.getElementById('booking-message').textContent = 'Errore imprevisto. Riprova.';
                 }
-
-                document.getElementById('booking-form').reset();
-                document.getElementById('booking-message').textContent = 'Prenotazione effettuata con successo!';
-                await loadDates();
-                await loadTimesForDate(date);
-            } catch (err) {
-                console.error('Errore imprevisto durante la prenotazione:', err);
-                document.getElementById('booking-message').textContent = 'Errore imprevisto. Riprova.';
-            }
-        });
+            });
+        }
 
         // Carica i dati iniziali
         document.addEventListener('DOMContentLoaded', async () => {
