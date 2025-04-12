@@ -258,4 +258,57 @@ button, input, select, textarea {
     .remember-me {
         margin: 0.75rem 0;
     }
+
+    .dashboard-header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .header-buttons {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .dashboard-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .tab-button {
+        flex: 1 1 calc(50% - 0.5rem);
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .dashboard-table {
+        font-size: 0.9rem;
+    }
+
+    .dashboard-table td, 
+    .dashboard-table th {
+        padding: 0.5rem;
+    }
+
+    .dashboard-form {
+        padding: 1rem;
+    }
+
+    .treatment-img {
+        max-width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-button {
+        flex: 1 1 100%;
+    }
+
+    .dashboard-table {
+        display: block;
+        overflow-x: auto;
+    }
 }

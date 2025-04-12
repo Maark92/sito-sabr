@@ -13,6 +13,9 @@
 <body>
     <header class="site-header">
         <h1><i class="fas fa-hand-sparkles"></i> Benvenuti da Sabrina</h1>
+        <button class="menu-toggle" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
         <nav>
             <ul>
                 <li><a href="#servizi"><i class="fas fa-concierge-bell"></i> Servizi</a></li>
@@ -246,6 +249,18 @@
             } catch (error) {
                 console.error('Errore nel caricamento dello sfondo:', error);
             }
+        });
+
+        // Aggiungi alla fine del file
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('nav ul').classList.toggle('active');
+        });
+
+        // Chiudi menu quando si clicca un link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('nav ul').classList.remove('active');
+            });
         });
     </script>
 </body>

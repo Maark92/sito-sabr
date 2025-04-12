@@ -142,6 +142,58 @@ footer {
     footer {
         font-size: 0.8rem;
     }
+
+    .site-header {
+        padding: 1rem;
+    }
+
+    .site-header nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        transition: 0.3s;
+        z-index: 1000;
+    }
+
+    .site-header nav ul.active {
+        right: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1001;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .services-container {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        margin: 0.5rem;
+    }
+
+    .booking-form {
+        padding: 1rem;
+    }
+
+    .booking-form input,
+    .booking-form select,
+    .booking-form textarea {
+        width: 100%;
+    }
 }
 
 /* Animazioni */
