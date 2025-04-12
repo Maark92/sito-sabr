@@ -266,6 +266,95 @@
         <script type="module">
             import { supabase } from './js/supabaseClient.js';
 
+            // Rendi globale l'oggetto supabase
+            window.supabase = supabase;
+
+            // Rendi globali tutte le funzioni necessarie
+            window.loadClients = async () => {
+                try {
+                    const { data: clients, error } = await supabase
+                        .from('clients')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    // Popola la tabella dei clienti
+                    const clientiTable = document.getElementById('clienti-table').querySelector('tbody');
+                    clientiTable.innerHTML = clients.map(client => `
+                        <tr>
+                            <td>${client.name}</td>
+                            <td>${client.email || 'N/A'}</td>
+                            <td>${client.phone}</td>
+                            <td>
+                                <button onclick="deleteClient(${client.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    // Popola il menu a tendina dei clienti per gli appuntamenti
+                    const appointmentClientSelect = document.getElementById('appointment-client');
+                    appointmentClientSelect.innerHTML = clients.map(client => `
+                        <option value="${client.id}">${client.name}</option>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento dei clienti:', err);
+                }
+            };
+
+            window.loadAvailability = async () => {
+                try {
+                    const { data: availability, error } = await supabase
+                        .from('availability')
+                        .select('*')
+                        .order('date', { ascending: true });
+
+                    if (error) throw error;
+
+                    const disponibilitaTable = document.getElementById('disponibilita-table').querySelector('tbody');
+                    disponibilitaTable.innerHTML = availability.map(item => `
+                        <tr>
+                            <td>${item.date}</td>
+                            <td>${item.time}</td>
+                            <td>
+                                <button onclick="deleteAvailability(${item.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento delle disponibilità:', err);
+                }
+            };
+
+            window.loadTreatments = async () => {
+                try {
+                    const { data: treatments, error } = await supabase
+                        .from('treatments')
+                        .select('*')
+                        .order('id', { ascending: true });
+
+                    if (error) throw error;
+
+                    const trattamentiTable = document.getElementById('trattamenti-table').querySelector('tbody');
+                    trattamentiTable.innerHTML = treatments.map(treatment => `
+                        <tr>
+                            <td>${treatment.name}</td>
+                            <td>${treatment.description}</td>
+                            <td>€${treatment.price.toFixed(2)}</td>
+                            <td><img src="${treatment.image_url}" alt="${treatment.name}" class="treatment-img"></td>
+                            <td>
+                                <button onclick="deleteTreatment(${treatment.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    return treatments;
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento dei trattamenti:', err);
+                    return [];
+                }
+            };
+
             // Funzione per caricare i clienti
             const loadClients = async () => {
                 try {
