@@ -2,13 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Reindirizzamento...</title>
+    <title>Pagina non trovata</title>
     <base href="/sito-sabrina/">
     <script>
-        if (window.location.pathname.includes('dashboard')) {
-            window.location.href = '/sito-sabrina/login.html';
+        // Gestione percorsi per GitHub Pages
+        const path = window.location.pathname;
+        const isGitHubPages = window.location.host.includes('github.io');
+        const baseUrl = isGitHubPages ? '/sito-sabrina' : '';
+        
+        if (path.includes('dashboard')) {
+            window.location.href = `${baseUrl}/login.html`;
         } else {
-            window.location.href = '/sito-sabrina/index.html';
+            window.location.href = `${baseUrl}/index.html`;
         }
     </script>
 </head>

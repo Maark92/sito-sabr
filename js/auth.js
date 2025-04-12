@@ -1,25 +1,20 @@
-import { supabase } from './supabaseClient.js';
+const AUTH = {
+    ADMIN_EMAIL: 'admin@example.com',
+    ADMIN_PASSWORD: 'password123',
 
-export const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        window.location.href = '/login.html';
+    isLoggedIn() {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    },
+
+    login(email, password) {
+        if (email === this.ADMIN_EMAIL && password === this.ADMIN_PASSWORD) {
+            localStorage.setItem('isLoggedIn', 'true');
+            return true;
+        }
         return false;
+    },
+
+    logout() {
+        localStorage.removeItem('isLoggedIn');
     }
-    return true;
-};
-
-export const login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    });
-    if (error) throw error;
-    return data;
-};
-
-export const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    window.location.href = '/login.html';
 };

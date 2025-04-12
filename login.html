@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <script src="./js/auth.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -25,13 +26,14 @@
     </div>
 
     <script>
-        // Credenziali amministratore (in pratica andrebbero gestite in modo più sicuro)
-        const ADMIN_EMAIL = 'admin@example.com';
-        const ADMIN_PASSWORD = 'password123';
+        // Verifica percorsi
+        console.log('Verifico percorsi...');
+        console.log('CSS loaded:', document.styleSheets.length > 0);
+        console.log('Auth loaded:', typeof AUTH !== 'undefined');
 
         // Verifica se già loggato
-        if (localStorage.getItem('isLoggedIn')) {
-            window.location.href = 'dashboard.html';
+        if (AUTH.isLoggedIn()) {
+            window.location.href = './dashboard.html';
         }
 
         document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -39,9 +41,8 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'dashboard.html';
+            if (AUTH.login(email, password)) {
+                window.location.href = './dashboard.html';
             } else {
                 document.getElementById('error-message').textContent = 'Credenziali non valide';
             }
