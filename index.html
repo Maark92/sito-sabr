@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="module" src="./js/supabaseClient.js"></script>
 </head>
 <body>
     <header class="site-header">
@@ -64,16 +65,12 @@
     </footer>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-        const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
-        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+        import { supabase } from './js/supabaseClient.js';
 
         // Funzione per caricare le date disponibili
         const loadDates = async () => {
             try {
-                const { data: availability, error } = await supabaseClient
+                const { data: availability, error } = await supabase
                     .from('availability')
                     .select('date');
 
@@ -97,7 +94,7 @@
         // Funzione per caricare gli orari disponibili per una data selezionata
         const loadTimesForDate = async (selectedDate) => {
             try {
-                const { data: availability, error: availabilityError } = await supabaseClient
+                const { data: availability, error: availabilityError } = await supabase
                     .from('availability')
                     .select('time')
                     .eq('date', selectedDate);
@@ -107,7 +104,7 @@
                     return;
                 }
 
-                const { data: bookedAppointments, error: appointmentsError } = await supabaseClient
+                const { data: bookedAppointments, error: appointmentsError } = await supabase
                     .from('appointments')
                     .select('time')
                     .eq('date', selectedDate);
@@ -154,7 +151,7 @@
                 const notes = document.getElementById('notes').value;
 
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('appointments')
                         .insert([{ client_name, phone, date, time, notes }]);
 
@@ -178,7 +175,7 @@
         // Funzione per caricare i trattamenti
         async function loadTreatments() {
             try {
-                const { data: treatments, error } = await supabaseClient
+                const { data: treatments, error } = await supabase
                     .from('treatments')
                     .select('*')
                     .order('id', { ascending: true });

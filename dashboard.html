@@ -7,6 +7,7 @@
     <!-- Percorsi aggiornati -->
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="module" src="./js/supabaseClient.js"></script>
 </head>
 <body>
     <header class="dashboard-header">
@@ -263,16 +264,12 @@
             });
         </script>
         <script type="module">
-            import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-            const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
-            const supabaseClient = createClient(supabaseUrl, supabaseKey);
+            import { supabase } from './js/supabaseClient.js';
 
             // Funzione per caricare i clienti
             const loadClients = async () => {
                 try {
-                    const { data: clients, error } = await supabaseClient
+                    const { data: clients, error } = await supabase
                         .from('clients')
                         .select('*');
 
@@ -312,7 +309,7 @@
                 const phone = document.getElementById('client-phone').value;
 
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('clients')
                         .insert([{ name, email, phone }]);
 
@@ -332,7 +329,7 @@
             window.deleteClient = async (id) => { // Aggiunto "window." per rendere la funzione globale
                 console.log('Tentativo di eliminare il cliente con ID:', id); // Log dell'ID
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('clients')
                         .delete()
                         .eq('id', id);
@@ -355,7 +352,7 @@
             // Funzione per caricare gli appuntamenti
             const loadAppointments = async () => {
                 try {
-                    const { data: appointments, error } = await supabaseClient
+                    const { data: appointments, error } = await supabase
                         .from('appointments')
                         .select('id, client_name, phone, date, time, notes'); // Usato 'client_name'
 
@@ -387,7 +384,7 @@
                 console.log('Tentativo di eliminare l\'appuntamento con ID:', id); // Log dell'ID
                 try {
                     // Recupera i dettagli dell'appuntamento prima di eliminarlo
-                    const { data: appointment, error: fetchError } = await supabaseClient
+                    const { data: appointment, error: fetchError } = await supabase
                         .from('appointments')
                         .select('id, date, time')
                         .eq('id', id)
@@ -402,7 +399,7 @@
                     }
 
                     // Procedi con l'eliminazione dell'appuntamento
-                    const { data: deleteData, error: deleteError } = await supabaseClient
+                    const { data: deleteData, error: deleteError } = await supabase
                         .from('appointments')
                         .delete()
                         .eq('id', id)
@@ -423,7 +420,7 @@
                     }
 
                     // Controlla se la combinazione di data e orario esiste già nella disponibilità
-                    const { data: existingAvailability, error: checkError } = await supabaseClient
+                    const { data: existingAvailability, error: checkError } = await supabase
                         .from('availability')
                         .select('id')
                         .eq('date', appointment.date)
@@ -438,7 +435,7 @@
 
                     // Inserisci la data e l'orario solo se non esistono già
                     if (!existingAvailability) {
-                        const { error: availabilityError } = await supabaseClient
+                        const { error: availabilityError } = await supabase
                             .from('availability')
                             .insert([{ date: appointment.date, time: appointment.time }]);
 
@@ -462,7 +459,7 @@
             // Funzione per caricare i trattamenti
             window.loadTreatments = async () => {
                 try {
-                    const { data: treatments, error } = await supabaseClient
+                    const { data: treatments, error } = await supabase
                         .from('treatments')
                         .select('*')
                         .order('id', { ascending: true });
@@ -495,7 +492,7 @@
             // Funzione per eliminare un trattamento
             window.deleteTreatment = async (id) => {
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('treatments')
                         .delete()
                         .eq('id', id);
@@ -521,7 +518,7 @@
                 const image_url = document.getElementById('treatment-image').value;
 
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('treatments')
                         .insert([{ 
                             name, 
@@ -547,7 +544,7 @@
             // Funzione per caricare le disponibilità
             const loadAvailability = async () => {
                 try {
-                    const { data: availability, error } = await supabaseClient
+                    const { data: availability, error } = await supabase
                         .from('availability')
                         .select('*');
 
@@ -578,7 +575,7 @@
                 const time = document.getElementById('availability-time').value;
 
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('availability')
                         .insert([{ date, time }]);
 
@@ -597,7 +594,7 @@
             // Funzione per eliminare una disponibilità
             const deleteAvailability = async (id) => {
                 try {
-                    const { error } = await supabaseClient
+                    const { error } = await supabase
                         .from('availability')
                         .delete()
                         .eq('id', id);
