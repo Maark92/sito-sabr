@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
-    <link rel="stylesheet" href="./css/dashboard.css">
-    <script type="module" src="./js/supabaseClient.js"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Importa Supabase direttamente dal CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="login-container">
@@ -21,19 +22,25 @@
             </div>
             <button type="submit">Accedi</button>
             <p id="error-message" class="error-message"></p>
-            <p><a href="./index.html">Torna alla Home</a></p>
+            <p><a href="index.html">Torna alla Home</a></p>
         </form>
     </div>
 
-    <script type="module">
-        import { supabase } from './js/supabaseClient.js';
+    <script>
+        // Inizializza Supabase
+        const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Check if already logged in
-        const session = await supabase.auth.getSession();
-        if (session.data.session) {
-            window.location.href = 'dashboard.html';
+        // Verifica se già loggato
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
+            }
         }
 
+        // Gestione login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -48,10 +55,13 @@
                 if (error) throw error;
                 window.location.href = 'dashboard.html';
             } catch (error) {
+                console.error('Errore login:', error);
                 document.getElementById('error-message').textContent = 'Credenziali non valide';
-                console.error('Errore di login:', error);
             }
         });
+
+        // Verifica sessione all'avvio
+        checkSession();
     </script>
 </body>
 </html>
