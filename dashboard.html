@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sabrina Onicotecnica</title>
+    <!-- Percorsi aggiornati -->
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <div class="header-buttons">
+            <button id="home-button" onclick="location.href='index.html'">Torna alla Home</button>
+            <button id="logout-button">Logout</button>
+        </div>
+    </header>
+
+    <nav class="dashboard-tabs">
+        <button class="tab-button active" data-tab="clienti">Clienti</button>
+        <button class="tab-button" data-tab="appuntamenti">Appuntamenti</button>
+        <button class="tab-button" data-tab="trattamenti">Trattamenti</button>
+        <button class="tab-button" data-tab="background-section">Sfondo</button>
+        <button class="tab-button" data-tab="gallery-section">Galleria</button>
+        <button class="tab-button" data-tab="disponibilita-section">Disponibilità</button>
+    </nav>
+
+    <main class="dashboard-content">
+        <!-- Gestione Clienti -->
+        <section id="clienti" class="tab-content active">
+            <h2>Gestione Clienti</h2>
+            <form id="add-client-form" class="dashboard-form">
+                <h3>Aggiungi Cliente</h3>
+                <div class="form-group">
+                    <label for="client-name">Nome:</label>
+                    <input type="text" id="client-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-email">Email:</label>
+                    <input type="email" id="client-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-phone">Telefono:</label>
+                    <input type="tel" id="client-phone" name="phone" required>
+                </div>
+                <button type="submit" class="btn">Aggiungi Cliente</button>
+            </form>
+            <table id="clienti-table" class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Clienti caricati dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Gestione Appuntamenti -->
+        <section id="appuntamenti" class="tab-content">
+            <h2>Gestione Appuntamenti</h2>
+            <form id="add-appointment-form" class="dashboard-form">
+                <h3>Aggiungi Appuntamento</h3>
+                <div class="form-group">
+                    <label for="appointment-client">Cliente:</label>
+                    <select id="appointment-client" name="client_id" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-date">Data:</label>
+                    <input type="date" id="appointment-date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-time">Orario:</label>
+                    <input type="time" id="appointment-time" name="time" required>
+                </div>
+                <button type="submit" class="btn">Aggiungi Appuntamento</button>
+            </form>
+            <table id="appuntamenti-table" class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Orario</th>
+                        <th>Note</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Appuntamenti caricati dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Gestione Trattamenti -->
+        <section id="trattamenti" class="tab-content">
+            <h2>Gestione Trattamenti</h2>
+            <form id="add-treatment-form" class="dashboard-form">
+                <h3>Aggiungi Trattamento</h3>
+                <div class="form-group">
+                    <label for="treatment-name">Nome Trattamento:</label>
+                    <input type="text" id="treatment-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-description">Descrizione:</label>
+                    <textarea id="treatment-description" name="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-price">Prezzo (€):</label>
+                    <input type="number" id="treatment-price" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-image">Immagine (URL):</label>
+                    <input type="url" id="treatment-image" name="image_url" required>
+                </div>
+                <button type="submit" class="btn">Aggiungi Trattamento</button>
+            </form>
+            <table id="trattamenti-table" class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Descrizione</th>
+                        <th>Prezzo</th>
+                        <th>Immagine</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Trattamenti caricati dinamicamente -->
+                    <!-- Le immagini avranno la classe "treatment-img" -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Gestione Sfondo -->
+        <section id="background-section" class="tab-content">
+            <h2>Gestione Sfondo</h2>
+            <form id="background-form" class="dashboard-form">
+                <label for="background-url">Inserisci l'URL dell'immagine di sfondo:</label>
+                <input type="url" id="background-url" placeholder="https://example.com/image.jpg" required>
+                <button type="submit">Aggiorna Sfondo</button>
+            </form>
+            <p id="background-message"></p>
+        </section>
+
+        <!-- Gestione Galleria -->
+        <section id="gallery-section" class="tab-content">
+            <h2>Gestione Galleria</h2>
+            <form id="gallery-form" class="dashboard-form">
+                <label for="gallery-image">Carica una nuova immagine per la galleria:</label>
+                <input type="file" id="gallery-image" accept="image/*" required>
+                <button type="submit">Carica Immagine</button>
+            </form>
+            <p id="gallery-message"></p>
+            <div id="gallery-preview" class="gallery-preview">
+                <!-- Immagini della galleria caricate dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Gestione Disponibilità -->
+        <section id="disponibilita-section" class="tab-content">
+            <h2>Gestione Disponibilità</h2>
+            <form id="add-availability-form" class="dashboard-form">
+                <h3>Aggiungi Disponibilità</h3>
+                <div class="form-group">
+                    <label for="availability-date">Data:</label>
+                    <input type="date" id="availability-date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="availability-time">Orario:</label>
+                    <input type="time" id="availability-time" name="time" required>
+                </div>
+                <button type="submit" class="btn">Aggiungi Disponibilità</button>
+            </form>
+            <table id="disponibilita-table" class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Orario</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Disponibilità caricate dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <script>
+            const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dx9qj0kdb/image/upload';
+            const uploadPreset = 'yzrzqskx'; // Nome del tuo upload preset configurato su Cloudinary
+
+            // Funzione per caricare immagini su Cloudinary
+            const uploadImageToCloudinary = async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', uploadPreset);
+
+                const response = await axios.post(cloudinaryUrl, formData);
+                return response.data.secure_url;
+            };
+
+            // Gestione del caricamento dello sfondo
+            document.getElementById('background-form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const backgroundUrl = document.getElementById('background-url').value;
+
+                if (!backgroundUrl) {
+                    document.getElementById('background-message').textContent = 'Inserisci un URL valido.';
+                    return;
+                }
+
+                try {
+                    // Salva l'URL dello sfondo in localStorage
+                    localStorage.setItem('backgroundImageURL', backgroundUrl);
+                    document.getElementById('background-message').textContent = 'Sfondo aggiornato con successo!';
+                    console.log('Nuovo URL dello sfondo:', backgroundUrl);
+                } catch (error) {
+                    console.error('Errore durante l\'aggiornamento dello sfondo:', error);
+                    document.getElementById('background-message').textContent = 'Errore durante l\'aggiornamento dello sfondo.';
+                }
+            });
+
+            // Gestione del caricamento delle immagini della galleria
+            document.getElementById('gallery-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const file = document.getElementById('gallery-image').files[0];
+
+                if (!file) {
+                    document.getElementById('gallery-message').textContent = 'Seleziona un file prima di caricare.';
+                    return;
+                }
+
+                try {
+                    const imageUrl = await uploadImageToCloudinary(file);
+                    document.getElementById('gallery-message').textContent = 'Immagine caricata con successo!';
+                    const galleryPreview = document.getElementById('gallery-preview');
+                    galleryPreview.innerHTML += `
+                        <div class="gallery-item">
+                            <img src="${imageUrl}" alt="Galleria">
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error('Errore durante il caricamento:', error.response?.data || error.message);
+                    document.getElementById('gallery-message').textContent = 'Errore durante il caricamento.';
+                }
+            });
+
+            // Funzione per cambiare tab
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+        </script>
+        <script type="module">
+            import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+            const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
+            const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+            // Funzione per caricare i clienti
+            const loadClients = async () => {
+                try {
+                    const { data: clients, error } = await supabaseClient
+                        .from('clients')
+                        .select('*');
+
+                    if (error) {
+                        console.error('Errore nel caricamento dei clienti:', error);
+                        return;
+                    }
+
+                    // Popola la tabella dei clienti
+                    const clientiTable = document.getElementById('clienti-table').querySelector('tbody');
+                    clientiTable.innerHTML = clients.map(client => `
+                        <tr>
+                            <td>${client.name}</td>
+                            <td>${client.email || 'N/A'}</td>
+                            <td>${client.phone}</td>
+                            <td>
+                                <button onclick="deleteClient(${client.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    // Popola il menu a tendina dei clienti per gli appuntamenti
+                    const appointmentClientSelect = document.getElementById('appointment-client');
+                    appointmentClientSelect.innerHTML = clients.map(client => `
+                        <option value="${client.id}">${client.name}</option>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento dei clienti:', err);
+                }
+            };
+
+            // Funzione per aggiungere un cliente
+            document.getElementById('add-client-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const name = document.getElementById('client-name').value;
+                const email = document.getElementById('client-email').value;
+                const phone = document.getElementById('client-phone').value;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('clients')
+                        .insert([{ name, email, phone }]);
+
+                    if (error) {
+                        console.error('Errore durante l\'aggiunta del cliente:', error);
+                        return;
+                    }
+
+                    document.getElementById('add-client-form').reset();
+                    await loadClients();
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'aggiunta del cliente:', err);
+                }
+            });
+
+            // Funzione per eliminare un cliente
+            window.deleteClient = async (id) => { // Aggiunto "window." per rendere la funzione globale
+                console.log('Tentativo di eliminare il cliente con ID:', id); // Log dell'ID
+                try {
+                    const { error } = await supabaseClient
+                        .from('clients')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) {
+                        console.error('Errore durante l\'eliminazione del cliente:', error);
+                        alert('Errore durante l\'eliminazione del cliente. Riprova.');
+                        return;
+                    }
+
+                    // Ricarica la lista dei clienti e aggiorna il menu a tendina
+                    await loadClients();
+                    alert('Cliente eliminato con successo!');
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'eliminazione del cliente:', err);
+                    alert('Errore imprevisto. Riprova.');
+                }
+            };
+
+            // Funzione per caricare gli appuntamenti
+            const loadAppointments = async () => {
+                try {
+                    const { data: appointments, error } = await supabaseClient
+                        .from('appointments')
+                        .select('id, client_name, phone, date, time, notes'); // Usato 'client_name'
+
+                    if (error) {
+                        console.error('Errore nel caricamento degli appuntamenti:', error);
+                        return;
+                    }
+
+                    const appuntamentiTable = document.getElementById('appuntamenti-table').querySelector('tbody');
+                    appuntamentiTable.innerHTML = appointments.map(appointment => `
+                        <tr>
+                            <td>${appointment.client_name}</td>
+                            <td>${appointment.phone}</td>
+                            <td>${appointment.date}</td>
+                            <td>${appointment.time}</td>
+                            <td>${appointment.notes || 'Nessuna nota'}</td>
+                            <td>
+                                <button onclick="deleteAppointment(${appointment.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento degli appuntamenti:', err);
+                }
+            };
+
+            // Funzione per eliminare un appuntamento
+            window.deleteAppointment = async (id) => {
+                console.log('Tentativo di eliminare l\'appuntamento con ID:', id); // Log dell'ID
+                try {
+                    // Recupera i dettagli dell'appuntamento prima di eliminarlo
+                    const { data: appointment, error: fetchError } = await supabaseClient
+                        .from('appointments')
+                        .select('id, date, time')
+                        .eq('id', id)
+                        .single();
+
+                    console.log('Record trovato:', appointment); // Log del record trovato
+
+                    if (fetchError || !appointment) {
+                        console.error('Appuntamento non trovato o errore durante la verifica:', fetchError);
+                        alert('Appuntamento non trovato. Riprova.');
+                        return;
+                    }
+
+                    // Procedi con l'eliminazione dell'appuntamento
+                    const { data: deleteData, error: deleteError } = await supabaseClient
+                        .from('appointments')
+                        .delete()
+                        .eq('id', id)
+                        .select('*'); // Restituisce i dati eliminati
+
+                    console.log('Risultato eliminazione:', deleteData); // Log del risultato dell'eliminazione
+
+                    if (deleteError) {
+                        console.error('Errore durante l\'eliminazione dell\'appuntamento:', deleteError);
+                        alert('Errore durante l\'eliminazione dell\'appuntamento. Riprova.');
+                        return;
+                    }
+
+                    if (!deleteData || deleteData.length === 0) {
+                        console.error('Nessun record eliminato. Verifica l\'ID fornito.');
+                        alert('Errore: Nessun record eliminato. Riprova.');
+                        return;
+                    }
+
+                    // Controlla se la combinazione di data e orario esiste già nella disponibilità
+                    const { data: existingAvailability, error: checkError } = await supabaseClient
+                        .from('availability')
+                        .select('id')
+                        .eq('date', appointment.date)
+                        .eq('time', appointment.time)
+                        .single();
+
+                    if (checkError) {
+                        console.error('Errore durante la verifica della disponibilità:', checkError);
+                        alert('Errore durante la verifica della disponibilità. Riprova.');
+                        return;
+                    }
+
+                    // Inserisci la data e l'orario solo se non esistono già
+                    if (!existingAvailability) {
+                        const { error: availabilityError } = await supabaseClient
+                            .from('availability')
+                            .insert([{ date: appointment.date, time: appointment.time }]);
+
+                        if (availabilityError) {
+                            console.error('Errore durante l\'aggiornamento della disponibilità:', availabilityError);
+                            alert('Errore durante l\'aggiornamento della disponibilità. Riprova.');
+                            return;
+                        }
+                    }
+
+                    // Ricarica la lista degli appuntamenti e delle disponibilità
+                    await loadAppointments();
+                    await loadAvailability();
+                    alert('Appuntamento eliminato con successo!');
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'eliminazione dell\'appuntamento:', err);
+                    alert('Errore imprevisto. Riprova.');
+                }
+            };
+
+            // Funzione per caricare i trattamenti
+            const loadTreatments = async () => {
+                try {
+                    const { data: treatments, error } = await supabaseClient
+                        .from('treatments')
+                        .select('*');
+
+                    if (error) {
+                        console.error('Errore nel caricamento dei trattamenti:', error);
+                        return;
+                    }
+
+                    const trattamentiTable = document.getElementById('trattamenti-table').querySelector('tbody');
+                    trattamentiTable.innerHTML = treatments.map(treatment => `
+                        <tr>
+                            <td>${treatment.name}</td>
+                            <td>${treatment.description}</td>
+                            <td>€${treatment.price.toFixed(2)}</td>
+                            <td><img src="${treatment.image_url}" alt="${treatment.name}" class="treatment-img"></td>
+                            <td>
+                                <button onclick="deleteTreatment(${treatment.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento dei trattamenti:', err);
+                }
+            };
+
+            // Funzione per aggiungere un trattamento
+            document.getElementById('add-treatment-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const name = document.getElementById('treatment-name').value;
+                const description = document.getElementById('treatment-description').value;
+                const price = parseFloat(document.getElementById('treatment-price').value);
+                const image_url = document.getElementById('treatment-image').value;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('treatments')
+                        .insert([{ name, description, price, image_url }]);
+
+                    if (error) {
+                        console.error('Errore durante l\'aggiunta del trattamento:', error);
+                        return;
+                    }
+
+                    document.getElementById('add-treatment-form').reset();
+                    await loadTreatments();
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'aggiunta del trattamento:', err);
+                }
+            });
+
+            // Funzione per eliminare un trattamento
+            const deleteTreatment = async (id) => {
+                try {
+                    const { error } = await supabaseClient
+                        .from('treatments')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) {
+                        console.error('Errore durante l\'eliminazione del trattamento:', error);
+                        return;
+                    }
+
+                    await loadTreatments();
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'eliminazione del trattamento:', err);
+                }
+            };
+
+            // Funzione per caricare le disponibilità
+            const loadAvailability = async () => {
+                try {
+                    const { data: availability, error } = await supabaseClient
+                        .from('availability')
+                        .select('*');
+
+                    if (error) {
+                        console.error('Errore nel caricamento delle disponibilità:', error);
+                        return;
+                    }
+
+                    const disponibilitaTable = document.getElementById('disponibilita-table').querySelector('tbody');
+                    disponibilitaTable.innerHTML = availability.map(item => `
+                        <tr>
+                            <td>${item.date}</td>
+                            <td>${item.time}</td>
+                            <td>
+                                <button onclick="deleteAvailability(${item.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (err) {
+                    console.error('Errore imprevisto durante il caricamento delle disponibilità:', err);
+                }
+            };
+
+            // Funzione per aggiungere una disponibilità
+            document.getElementById('add-availability-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const date = document.getElementById('availability-date').value;
+                const time = document.getElementById('availability-time').value;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('availability')
+                        .insert([{ date, time }]);
+
+                    if (error) {
+                        console.error('Errore durante l\'aggiunta della disponibilità:', error);
+                        return;
+                    }
+
+                    document.getElementById('add-availability-form').reset();
+                    await loadAvailability();
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'aggiunta della disponibilità:', err);
+                }
+            });
+
+            // Funzione per eliminare una disponibilità
+            const deleteAvailability = async (id) => {
+                try {
+                    const { error } = await supabaseClient
+                        .from('availability')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) {
+                        console.error('Errore durante l\'eliminazione della disponibilità:', error);
+                        return;
+                    }
+
+                    await loadAvailability();
+                } catch (err) {
+                    console.error('Errore imprevisto durante l\'eliminazione della disponibilità:', err);
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                // Carica i dati iniziali
+                await loadClients(); // Carica i clienti aggiornati
+                await loadAppointments();
+                await loadTreatments();
+                await loadAvailability();
+            });
+        </script>
+    </main>
+    <footer class="dashboard-footer">
+        <p>&copy; 2023 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
+    </footer>
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>

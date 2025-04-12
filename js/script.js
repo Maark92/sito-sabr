@@ -4,6 +4,7 @@ const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
+// Funzione per caricare le date disponibili
 const loadDates = async () => {
     try {
         const { data: availability, error } = await supabaseClient
@@ -25,6 +26,7 @@ const loadDates = async () => {
     }
 };
 
+// Funzione per caricare gli orari disponibili per una data selezionata
 const loadTimesForDate = async (selectedDate) => {
     try {
         const { data: availability, error: availabilityError } = await supabaseClient
@@ -60,11 +62,13 @@ const loadTimesForDate = async (selectedDate) => {
     }
 };
 
+// Aggiungi un listener per aggiornare gli orari quando cambia la data
 document.getElementById('date').addEventListener('change', async (event) => {
     const selectedDate = event.target.value;
     await loadTimesForDate(selectedDate);
 });
 
+// Funzione per gestire la prenotazione
 document.getElementById('booking-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -95,6 +99,19 @@ document.getElementById('booking-form').addEventListener('submit', async (event)
     }
 });
 
+// Carica i dati iniziali
 document.addEventListener('DOMContentLoaded', async () => {
     await loadDates();
+
+    // Carica lo sfondo dinamico
+    try {
+        const backgroundImageURL = localStorage.getItem('backgroundImageURL');
+        if (backgroundImageURL) {
+            document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        }
+    } catch (error) {
+        console.error('Errore nel caricamento dello sfondo:', error);
+    }
 });
