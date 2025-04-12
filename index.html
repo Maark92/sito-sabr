@@ -3,10 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect</title>
-    <meta http-equiv="refresh" content="0; url=sito/index.html">
+    <title>Onicotecnica Sabrina</title>
+    <!-- Percorsi aggiornati per la nuova posizione -->
+    <link rel="stylesheet" href="./sito/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <p>Se non vieni reindirizzato automaticamente, <a href="sito/index.html">clicca qui</a>.</p>
+    <header class="site-header">
+        <h1><i class="fas fa-hand-sparkles"></i> Benvenuti da Sabrina</h1>
+        <nav>
+            <ul>
+                <li><a href="#servizi"><i class="fas fa-concierge-bell"></i> Servizi</a></li>
+                <li><a href="#galleria"><i class="fas fa-images"></i> Galleria</a></li>
+                <li><a href="#prenotazioni"><i class="fas fa-calendar-alt"></i> Prenotazioni</a></li>
+                <li><a href="./sito/dashboard.html"><i class="fas fa-user-cog"></i> Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="servizi" class="section">
+        <h2>I nostri servizi</h2>
+        <div id="servizi-list" class="servizi-container">
+            <!-- Trattamenti caricati dinamicamente -->
+        </div>
+    </section>
+
+    <section id="galleria" class="section">
+        <h2>Galleria</h2>
+        <p>Foto dei nostri lavori.</p>
+        <div class="galleria-container">
+            <!-- Percorsi aggiornati per le immagini -->
+            <img src="./sito/images/gallery1.jpg" alt="Galleria 1">
+            <img src="./sito/images/gallery2.jpg" alt="Galleria 2">
+            <img src="./sito/images/gallery3.jpg" alt="Galleria 3">
+        </div>
+    </section>
+
+    <section id="prenotazioni" class="section">
+        <h2><i class="fas fa-calendar-check"></i> Prenota un trattamento</h2>
+        <form id="booking-form" class="booking-form">
+            <!-- ...existing code... -->
+        </form>
+        <p id="booking-message"></p>
+    </section>
+
+    <footer class="site-footer">
+        <p>&copy; 2023 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        // ...existing code...
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Recupera l'URL dello sfondo da localStorage
+                const backgroundImageURL = localStorage.getItem('backgroundImageURL');
+
+                if (backgroundImageURL) {
+                    // Applica l'immagine di sfondo dinamicamente
+                    document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                } else {
+                    console.warn('Nessun URL dello sfondo trovato in localStorage.');
+                }
+            } catch (error) {
+                console.error('Errore nel caricamento dello sfondo:', error);
+            }
+        });
+    </script>
 </body>
 </html>
