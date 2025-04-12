@@ -685,3 +685,51 @@ footer {
         width: 100%;
     }
 }
+
+/* Menu di navigazione - VERSIONE DEFINITIVA */
+.site-header {
+    background-color: #f8c1d1;
+    padding: 20px;
+    text-align: center;
+}
+
+.site-header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.site-header nav li a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: white;
+    color: #e91e63;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.site-header nav li a:hover {
+    background-color: #f8bbd0;
+    transform: scale(1.05);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .site-header nav ul {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+
+    .site-header nav li {
+        width: 100%;
+    }
+}
