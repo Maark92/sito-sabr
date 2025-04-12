@@ -4,23 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <section id="login">
-        <h2>Accedi alla Dashboard</h2>
-        <form id="login-form">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            
+    <div class="login-container">
+        <form id="login-form" class="login-form">
+            <h2>Accesso Dashboard</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
             <button type="submit">Accedi</button>
+            <p id="error-message" class="error-message"></p>
         </form>
-        <p id="login-message"></p>
-    </section>
-    <script type="module" src="js/login.js"></script>
+    </div>
+
+    <script type="module">
+        import { login } from './js/auth.js';
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                await login(email, password);
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                document.getElementById('error-message').textContent = 'Credenziali non valide';
+            }
+        });
+    </script>
 </body>
 </html>
