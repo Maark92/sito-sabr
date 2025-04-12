@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
+    <base href="/sito-sabrina/">
     <link rel="stylesheet" href="css/dashboard.css">
-    <script type="module" src="./js/supabaseClient.js"></script>
+    <script type="module" src="js/supabaseClient.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -28,6 +29,12 @@
     <script type="module">
         import { supabase } from './js/supabaseClient.js';
 
+        // Check if already logged in
+        const session = await supabase.auth.getSession();
+        if (session.data.session) {
+            window.location.href = '/sito-sabrina/dashboard.html';
+        }
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -40,9 +47,10 @@
                 });
 
                 if (error) throw error;
-                window.location.href = './dashboard.html';
+                window.location.href = '/sito-sabrina/dashboard.html';
             } catch (error) {
                 document.getElementById('error-message').textContent = 'Credenziali non valide';
+                console.error('Errore di login:', error);
             }
         });
     </script>
