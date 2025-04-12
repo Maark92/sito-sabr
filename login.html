@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
     <link rel="stylesheet" href="css/dashboard.css">
+    <script type="module" src="./js/supabaseClient.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -20,11 +21,12 @@
             </div>
             <button type="submit">Accedi</button>
             <p id="error-message" class="error-message"></p>
+            <p><a href="./index.html">Torna alla Home</a></p>
         </form>
     </div>
 
     <script type="module">
-        import { login } from './js/auth.js';
+        import { supabase } from './js/supabaseClient.js';
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -32,8 +34,13 @@
             const password = document.getElementById('password').value;
 
             try {
-                await login(email, password);
-                window.location.href = '/dashboard.html';
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+                window.location.href = './dashboard.html';
             } catch (error) {
                 document.getElementById('error-message').textContent = 'Credenziali non valide';
             }
