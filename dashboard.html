@@ -2,17 +2,17 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - Sabrina Onicotecnica</title>
     <!-- Percorsi aggiornati -->
-    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="dashboard-header">
         <h1>Dashboard</h1>
         <div class="header-buttons">
-            <button id="home-button" onclick="location.href='index.html'">Torna alla Home</button>
+            <button id="home-button" onclick="location.href='./'">Torna alla Home</button>
             <button id="logout-button">Logout</button>
         </div>
     </header>
@@ -460,11 +460,12 @@
             };
 
             // Funzione per caricare i trattamenti
-            const loadTreatments = async () => {
+            window.loadTreatments = async () => {
                 try {
                     const { data: treatments, error } = await supabaseClient
                         .from('treatments')
-                        .select('*');
+                        .select('*')
+                        .order('id', { ascending: true });
 
                     if (error) {
                         console.error('Errore nel caricamento dei trattamenti:', error);
@@ -483,12 +484,35 @@
                             </td>
                         </tr>
                     `).join('');
+
+                    return treatments;
                 } catch (err) {
                     console.error('Errore imprevisto durante il caricamento dei trattamenti:', err);
+                    return [];
                 }
             };
 
-            // Funzione per aggiungere un trattamento
+            // Funzione per eliminare un trattamento
+            window.deleteTreatment = async (id) => {
+                try {
+                    const { error } = await supabaseClient
+                        .from('treatments')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) {
+                        alert('Errore durante l\'eliminazione del trattamento');
+                        return;
+                    }
+
+                    await window.loadTreatments();
+                    alert('Trattamento eliminato con successo');
+                } catch (err) {
+                    alert('Errore imprevisto durante l\'eliminazione');
+                }
+            };
+
+            // Modifica la funzione per aggiungere un trattamento
             document.getElementById('add-treatment-form').addEventListener('submit', async (event) => {
                 event.preventDefault();
                 const name = document.getElementById('treatment-name').value;
@@ -499,38 +523,26 @@
                 try {
                     const { error } = await supabaseClient
                         .from('treatments')
-                        .insert([{ name, description, price, image_url }]);
+                        .insert([{ 
+                            name, 
+                            description, 
+                            price, 
+                            image_url
+                        }]);
 
                     if (error) {
                         console.error('Errore durante l\'aggiunta del trattamento:', error);
+                        alert('Errore durante l\'aggiunta del trattamento');
                         return;
                     }
 
                     document.getElementById('add-treatment-form').reset();
-                    await loadTreatments();
+                    await window.loadTreatments();
+                    alert('Trattamento aggiunto con successo!');
                 } catch (err) {
                     console.error('Errore imprevisto durante l\'aggiunta del trattamento:', err);
                 }
             });
-
-            // Funzione per eliminare un trattamento
-            const deleteTreatment = async (id) => {
-                try {
-                    const { error } = await supabaseClient
-                        .from('treatments')
-                        .delete()
-                        .eq('id', id);
-
-                    if (error) {
-                        console.error('Errore durante l\'eliminazione del trattamento:', error);
-                        return;
-                    }
-
-                    await loadTreatments();
-                } catch (err) {
-                    console.error('Errore imprevisto durante l\'eliminazione del trattamento:', err);
-                }
-            };
 
             // Funzione per caricare le disponibilità
             const loadAvailability = async () => {
@@ -613,6 +625,5 @@
     <footer class="dashboard-footer">
         <p>&copy; 2023 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
     </footer>
-    <script src="./js/dashboard.js"></script>
 </body>
 </html>

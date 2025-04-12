@@ -24,7 +24,7 @@
 
     <section id="servizi" class="section">
         <h2>I nostri servizi</h2>
-        <div id="servizi-list" class="servizi-container">
+        <div class="services-container servizi-container">
             <!-- Trattamenti caricati dinamicamente -->
         </div>
     </section>
@@ -175,9 +175,60 @@
             });
         }
 
+        // Funzione per caricare i trattamenti
+        async function loadTreatments() {
+            try {
+                const { data: treatments, error } = await supabaseClient
+                    .from('treatments')
+                    .select('*')
+                    .order('id', { ascending: true });
+
+                if (error) {
+                    console.error('Errore nel caricamento dei trattamenti:', error);
+                    return;
+                }
+
+                const servicesContainer = document.querySelector('.services-container, .servizi-container');
+                if (servicesContainer && treatments) {
+                    // Raggruppa i trattamenti per categoria
+                    const categories = {
+                        'Manicure': treatments.filter(t => t.name.toLowerCase().includes('manicure')),
+                        'Pedicure': treatments.filter(t => t.name.toLowerCase().includes('pedicure')),
+                        'Ricostruzione': treatments.filter(t => t.name.toLowerCase().includes('ricostruzione')),
+                        'Altri Servizi': treatments.filter(t => 
+                            !t.name.toLowerCase().includes('manicure') && 
+                            !t.name.toLowerCase().includes('pedicure') && 
+                            !t.name.toLowerCase().includes('ricostruzione')
+                        )
+                    };
+
+                    servicesContainer.innerHTML = Object.entries(categories)
+                        .filter(([_, items]) => items.length > 0) // Mostra solo categorie non vuote
+                        .map(([category, items]) => `
+                            <div class="services-category">
+                                <h3>${category}</h3>
+                                <div class="service-grid">
+                                    ${items.map(treatment => `
+                                        <div class="service-card">
+                                            <img src="${treatment.image_url}" alt="${treatment.name}">
+                                            <h3>${treatment.name}</h3>
+                                            <p>${treatment.description}</p>
+                                            <p class="price">€${treatment.price.toFixed(2)}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('');
+                }
+            } catch (err) {
+                console.error('Errore imprevisto:', err);
+            }
+        }
+
         // Carica i dati iniziali
         document.addEventListener('DOMContentLoaded', async () => {
             await loadDates();
+            await loadTreatments();
         });
     </script>
 

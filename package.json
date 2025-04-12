@@ -1,0 +1,19 @@
+{
+  "name": "sito-sabrina",
+  "version": "1.0.0",
+  "description": "Sito web per Sabrina Onicotecnica",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@babel/preset-env": "^7.23.8"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]
+  }
+}

@@ -150,3 +150,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
     }
 });
+
+// Carica i trattamenti dalla localStorage o dal database
+async function loadTreatmentsForHome() {
+    const servicesContainer = document.querySelector('.services-container');
+    if (!servicesContainer) return;
+
+    try {
+        // Prova a caricare i trattamenti dal localStorage
+        const cachedTreatments = localStorage.getItem('treatments');
+        let treatments = cachedTreatments ? JSON.parse(cachedTreatments) : [];
+
+        // Se non ci sono trattamenti in cache, caricali dal database
+        if (!treatments.length) {
+            const { data, error } = await supabase
+                .from('treatments')
+                .select('*')
+                .order('id', { ascending: true });
+
+            if (error) throw error;
+            treatments = data;
+        }
+
+        // Mostra i trattamenti
+        servicesContainer.innerHTML = treatments.map(treatment => `
+            <div class="service-card">
+                <img src="${treatment.image_url}" alt="${treatment.name}" class="service-image">
+                <h3>${treatment.name}</h3>
+                <p>${treatment.description}</p>
+                <p class="price">€${treatment.price.toFixed(2)}</p>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error('Errore nel caricamento dei trattamenti:', err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadTreatmentsForHome);
