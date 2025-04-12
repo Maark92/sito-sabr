@@ -1,0 +1,14 @@
+# Vai alla cartella del progetto
+cd "c:\Users\marco\Desktop\sito sabrina"
+
+# Verifica lo stato dei file
+git status
+
+# Aggiungi tutti i file modificati
+git add .
+
+# Crea il commit
+git commit -m "Fix percorsi login e autenticazione"
+
+# Pusha le modifiche
+git push origin main
