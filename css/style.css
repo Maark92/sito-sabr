@@ -369,14 +369,15 @@ footer {
 
 /* Header */
 .site-header {
-    position: relative;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.95);
+    background-color: #f8c1d1;
+    padding: 20px;
+    text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .site-header nav {
     width: 100%;
+    margin-top: 15px;
 }
 
 .site-header nav ul {
@@ -384,51 +385,32 @@ footer {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.site-header nav li {
-    margin: 0;
-}
-
-.site-header nav a {
-    display: flex;
+.site-header nav li a {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    color: #333;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: white;
+    color: #e91e63;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.site-header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.site-header nav li a i {
+    font-size: 1.2rem;
 }
 
-.site-header nav ul li {
-    display: inline;
-}
-
-.site-header nav ul li a {
-    font-size: 16px;
-    font-weight: 500;
-    padding: 10px 20px;
-    background-color: white;
-    color: #e91e63;
-    border-radius: 30px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.site-header nav ul li a:hover {
+.site-header nav li a:hover {
     background-color: #f8bbd0;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 /* Header e navigazione */
@@ -691,12 +673,18 @@ footer {
     background-color: #f8c1d1;
     padding: 20px;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.site-header nav {
+    width: 100%;
+    margin-top: 15px;
 }
 
 .site-header nav ul {
     list-style: none;
     padding: 0;
-    margin: 15px 0;
+    margin: 0;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -717,6 +705,10 @@ footer {
     transition: all 0.3s ease;
 }
 
+.site-header nav li a i {
+    font-size: 1.2rem;
+}
+
 .site-header nav li a:hover {
     background-color: #f8bbd0;
     transform: scale(1.05);
@@ -725,11 +717,18 @@ footer {
 /* Mobile */
 @media (max-width: 768px) {
     .site-header nav ul {
+        display: grid;
         grid-template-columns: repeat(2, 1fr);
-        width: 100%;
+        gap: 10px;
+        padding: 10px;
     }
 
     .site-header nav li {
         width: 100%;
+    }
+
+    .site-header nav li a {
+        width: 100%;
+        justify-content: center;
     }
 }
