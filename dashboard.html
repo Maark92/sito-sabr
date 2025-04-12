@@ -16,6 +16,12 @@
             window.location.href = './login.html';
         }
     </script>
+    <script>
+        // Protezione della dashboard
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+    </script>
 </head>
 <body>
     <header class="dashboard-header">
@@ -723,6 +729,13 @@
                 await loadAppointments();
                 await loadTreatments();
                 await loadAvailability();
+            });
+        </script>
+        <script>
+            // Gestione logout
+            document.getElementById('logout-button').addEventListener('click', () => {
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html';
             });
         </script>
     </main>

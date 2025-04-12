@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dashboard</title>
     <link rel="stylesheet" href="css/dashboard.css">
-    <!-- Importa Supabase direttamente dal CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="login-container">
@@ -27,41 +25,27 @@
     </div>
 
     <script>
-        // Inizializza Supabase
-        const supabaseUrl = 'https://cikjhhbwxobypgofavuj.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Credenziali amministratore (in pratica andrebbero gestite in modo più sicuro)
+        const ADMIN_EMAIL = 'admin@example.com';
+        const ADMIN_PASSWORD = 'password123';
 
         // Verifica se già loggato
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'dashboard.html';
-            }
+        if (localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'dashboard.html';
         }
 
-        // Gestione login
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
-
-                if (error) throw error;
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                localStorage.setItem('isLoggedIn', 'true');
                 window.location.href = 'dashboard.html';
-            } catch (error) {
-                console.error('Errore login:', error);
+            } else {
                 document.getElementById('error-message').textContent = 'Credenziali non valide';
             }
         });
-
-        // Verifica sessione all'avvio
-        checkSession();
     </script>
 </body>
 </html>
