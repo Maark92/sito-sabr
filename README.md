@@ -1,10 +1,15 @@
 # Sito Sabrina Onicotecnica
 
-Sito web per la gestione di un'attività di onicotecnica, include:
-- Dashboard amministrativa
-- Sistema di prenotazioni
+Sistema di gestione per centro estetico con:
+- Prenotazioni online
 - Gestione servizi e trattamenti
-- Galleria lavori
+- Dashboard amministrativa
+- Sistema di autenticazione
+
+## Configurazione
+1. Clone del repository
+2. Configurazione Supabase nel file `js/supabaseClient.js`
+3. Deploy su GitHub Pages
 
 ## Tecnologie utilizzate
 - HTML/CSS/JavaScript

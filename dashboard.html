@@ -7,12 +7,30 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="module" src="./js/supabaseClient.js"></script>
+    <script type="module">
+        import { SessionManager } from './js/sessionManager.js';
+        import { supabase } from './js/supabaseClient.js';
+
+        // Verifica autenticazione all'avvio
+        const checkAuth = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            // Avvia il timer della sessione
+            SessionManager.startSessionTimer();
+        };
+
+        checkAuth();
+    </script>
 </head>
 <body>
     <header class="dashboard-header">
         <h1>Dashboard</h1>
         <div class="header-buttons">
             <button id="home-button" onclick="location.href='./'">Torna alla Home</button>
+            <button id="logout-button">Logout</button>
         </div>
     </header>
 
@@ -263,6 +281,12 @@
         </script>
         <script type="module">
             import { supabase } from './js/supabaseClient.js';
+
+            // Gestione logout
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+            });
             
             // Rendi globale l'oggetto supabase
             window.supabase = supabase;
