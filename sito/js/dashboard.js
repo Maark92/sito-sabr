@@ -1,0 +1,3 @@
+import { supabaseClient } from './supabaseClient.js';
+
+// ...existing code...
