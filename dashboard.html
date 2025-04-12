@@ -4,31 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - Sabrina Onicotecnica</title>
-    <!-- Percorsi aggiornati -->
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="module" src="./js/supabaseClient.js"></script>
-    <script type="module" src="./js/auth.js"></script>
-    <base href="/sito-sabrina/">
-    <script>
-        // Verifica se l'utente è autenticato
-        if (!localStorage.getItem('supabase.auth.token')) {
-            window.location.href = './login.html';
-        }
-    </script>
-    <script>
-        // Protezione della dashboard
-        if (!localStorage.getItem('isLoggedIn')) {
-            window.location.href = 'login.html';
-        }
-    </script>
 </head>
 <body>
     <header class="dashboard-header">
         <h1>Dashboard</h1>
         <div class="header-buttons">
             <button id="home-button" onclick="location.href='./'">Torna alla Home</button>
-            <button id="logout-button">Logout</button>
         </div>
     </header>
 
@@ -278,17 +262,7 @@
             });
         </script>
         <script type="module">
-            import { checkAuth, logout } from './js/auth.js';
             import { supabase } from './js/supabaseClient.js';
-
-            // Verifica autenticazione all'avvio
-            document.addEventListener('DOMContentLoaded', async () => {
-                if (!await checkAuth()) return;
-                // ...resto del codice esistente...
-            });
-
-            // Gestione logout
-            document.getElementById('logout-button').addEventListener('click', logout);
             
             // Rendi globale l'oggetto supabase
             window.supabase = supabase;
@@ -729,13 +703,6 @@
                 await loadAppointments();
                 await loadTreatments();
                 await loadAvailability();
-            });
-        </script>
-        <script>
-            // Gestione logout
-            document.getElementById('logout-button').addEventListener('click', () => {
-                localStorage.removeItem('isLoggedIn');
-                window.location.href = 'login.html';
             });
         </script>
     </main>
