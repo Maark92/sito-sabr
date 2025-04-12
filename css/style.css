@@ -144,7 +144,31 @@ footer {
     }
 
     .site-header {
+        text-align: center;
+    }
+
+    .site-header h1 {
+        margin-bottom: 1rem;
+    }
+
+    .site-header nav ul {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    .site-header nav a {
+        flex-direction: column;
+        text-align: center;
         padding: 1rem;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .site-header nav i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .site-header nav ul {
@@ -270,6 +294,10 @@ footer {
         font-size: 1.5rem;
     }
 
+    .site-header nav ul {
+        grid-template-columns: 1fr;
+    }
+
     .site-header nav li {
         flex: 1 1 100%;
     }
@@ -341,11 +369,38 @@ footer {
 
 /* Header */
 .site-header {
-    background-color: rgba(233, 30, 99, 0.9); /* Rosa semi-trasparente */
-    color: white;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.site-header nav {
+    width: 100%;
+}
+
+.site-header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.site-header nav li {
+    margin: 0;
+}
+
+.site-header nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .site-header nav ul {

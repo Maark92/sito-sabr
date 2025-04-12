@@ -1,4 +1,4 @@
-# Vai alla cartella del progetto
+# Naviga alla cartella del progetto
 cd "c:\Users\marco\Desktop\sito sabrina"
 
 # Verifica lo stato dei file
@@ -8,7 +8,7 @@ git status
 git add .
 
 # Crea il commit
-git commit -m "Fix percorsi login e autenticazione"
+git commit -m "Fix layout mobile e ottimizzazioni responsive"
 
 # Pusha le modifiche
 git push origin main
