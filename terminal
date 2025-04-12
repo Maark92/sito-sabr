@@ -1,14 +1,14 @@
 # Naviga alla cartella del progetto
 cd "c:\Users\marco\Desktop\sito sabrina"
 
-# Verifica lo stato dei file
+# Verifica lo stato delle modifiche
 git status
 
-# Aggiungi tutti i file modificati
+# Aggiungi tutte le modifiche
 git add .
 
 # Crea il commit
-git commit -m "Fix layout mobile e ottimizzazioni responsive"
+git commit -m "Fix menu mobile e stili di navigazione"
 
 # Pusha le modifiche
 git push origin main
