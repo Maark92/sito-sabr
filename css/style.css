@@ -481,6 +481,58 @@ footer {
     transform: translateY(-2px);
 }
 
+/* Header principale e navigazione */
+.site-header {
+    background-color: #f8c1d1;
+    padding: 20px;
+    text-align: center;
+}
+
+.site-header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.site-header nav li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.site-header nav li a i {
+    font-size: 1.2rem;
+}
+
+.site-header nav li a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .site-header nav ul {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 10px;
+    }
+
+    .site-header nav li a {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
 /* Sections */
 .section {
     background-color: rgba(255, 255, 255, 0.8); /* Sfondo semi-trasparente per leggibilità */
