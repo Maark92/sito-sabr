@@ -11,14 +11,21 @@
     <script type="module" src="./js/supabaseClient.js"></script>
 </head>
 <body>
-    <header class="site-header">
-        <h1><i class="fas fa-hand-sparkles"></i> Benvenuti da Sabrina</h1>
-        <nav>
-            <ul>
+    <header>
+        <nav class="navigation">
+            <h1><i class="fas fa-hand-sparkles"></i> Benvenuti da Sabrina</h1>
+            
+            <button class="mobile-menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-links">
                 <li><a href="#servizi"><i class="fas fa-concierge-bell"></i> Servizi</a></li>
                 <li><a href="#galleria"><i class="fas fa-images"></i> Galleria</a></li>
                 <li><a href="#prenotazioni"><i class="fas fa-calendar-alt"></i> Prenotazioni</a></li>
-                <li><a href="./dashboard.html"><i class="fas fa-user-cog"></i> Dashboard</a></li>
+                <li><a href="dashboard.html" class="dashboard-button"><i class="fas fa-user-cog"></i> Dashboard</a></li>
             </ul>
         </nav>
     </header>
@@ -64,6 +71,7 @@
         <p>&copy; 2023 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
     </footer>
 
+    <!-- Script per Supabase e funzionalità principali -->
     <script type="module">
         import { supabase } from './js/supabaseClient.js';
 
@@ -229,24 +237,23 @@
         });
     </script>
 
+    <!-- Script per lo sfondo -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             try {
-                // Recupera l'URL dello sfondo da localStorage
                 const backgroundImageURL = localStorage.getItem('backgroundImageURL');
-
                 if (backgroundImageURL) {
-                    // Applica l'immagine di sfondo dinamicamente
                     document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
-                } else {
-                    console.warn('Nessun URL dello sfondo trovato in localStorage.');
                 }
             } catch (error) {
                 console.error('Errore nel caricamento dello sfondo:', error);
             }
         });
     </script>
+    
+    <!-- Script per il menu mobile -->
+    <script src="./js/menu.js"></script>
 </body>
 </html>

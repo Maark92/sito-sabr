@@ -1,14 +1,11 @@
 # Naviga alla cartella del progetto
 cd "c:\Users\marco\Desktop\sito sabrina"
 
-# Verifica lo stato delle modifiche
-git status
-
-# Aggiungi tutte le modifiche
+# Aggiungi i file modificati
 git add .
 
-# Crea il commit
-git commit -m "Fix menu mobile e stili di navigazione"
+# Crea il commit con un messaggio descrittivo
+git commit -m "Fix menu mobile e pulizia codice JavaScript"
 
-# Pusha le modifiche
+# Pusha le modifiche al repository remoto
 git push origin main
