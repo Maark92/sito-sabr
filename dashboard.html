@@ -702,7 +702,7 @@
                 }
             });
 
-            // Funzione per eliminare una disponibilità
+            // Unica definizione della funzione deleteAvailability
             const deleteAvailability = async (id) => {
                 try {
                     const { error } = await supabase
@@ -711,15 +711,22 @@
                         .eq('id', id);
 
                     if (error) {
-                        console.error('Errore durante l\'eliminazione della disponibilità:', error);
+                        console.error('Errore durante l\'eliminazione:', error);
+                        alert('Errore durante l\'eliminazione della disponibilità');
                         return;
                     }
 
-                    await loadAvailability();
+                    // Ricarica la tabella dopo l'eliminazione
+                    loadAvailability();
+                    alert('Disponibilità eliminata con successo');
                 } catch (err) {
-                    console.error('Errore imprevisto durante l\'eliminazione della disponibilità:', err);
+                    console.error('Errore imprevisto:', err);
+                    alert('Errore durante l\'eliminazione');
                 }
             };
+
+            // Rendi la funzione disponibile globalmente
+            window.deleteAvailability = deleteAvailability;
 
             document.addEventListener('DOMContentLoaded', async () => {
                 // Carica i dati iniziali
