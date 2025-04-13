@@ -13,7 +13,7 @@
 <body>
     <header>
         <nav class="navigation">
-            <h1><i class="fas fa-hand-sparkles"></i> Benvenuti da Sabrina</h1>
+            <h1><i class="fas fa-hand-sparkles"></i> Con Strass o Senza</h1>
             
             <button class="mobile-menu-toggle" aria-label="Menu">
                 <span></span>
@@ -37,16 +37,6 @@
         </div>
     </section>
 
-    <section id="galleria" class="section">
-        <h2>Galleria</h2>
-        <p>Foto dei nostri lavori.</p>
-        <div class="galleria-container">
-            <img src="./images/gallery1.jpg" alt="Galleria 1">
-            <img src="./images/gallery2.jpg" alt="Galleria 2">
-            <img src="./images/gallery3.jpg" alt="Galleria 3">
-        </div>
-    </section>
-
     <section id="prenotazioni" class="section">
         <h2><i class="fas fa-calendar-check"></i> Prenota un trattamento</h2>
         <form id="booking-form" class="booking-form">
@@ -67,8 +57,19 @@
         <p id="booking-message"></p>
     </section>
 
+    <section id="galleria" class="section">
+        <h2>Galleria</h2>
+        <p>Foto dei nostri lavori.</p>
+        <div class="galleria-container">
+            <img src="./images/gallery1.jpg" alt="Galleria 1">
+            <img src="./images/gallery2.jpg" alt="Galleria 2">
+            <img src="./images/gallery3.jpg" alt="Galleria 3">
+        </div>
+    </section>
+
+   
     <footer class="site-footer">
-        <p>&copy; 2023 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
+        <p>&copy; 2025 Sabrina Onicotecnica. Tutti i diritti riservati.</p>
     </footer>
 
     <!-- Script per Supabase e funzionalità principali -->
@@ -218,7 +219,7 @@
                                             <img src="${treatment.image_url}" alt="${treatment.name}">
                                             <h3>${treatment.name}</h3>
                                             <p>${treatment.description}</p>
-                                            <p class="price">€${treatment.price.toFixed(2)}</p>
+                                            <p class="price">Prezzo a partire da €${treatment.price.toFixed(2)}</p>
                                         </div>
                                     `).join('')}
                                 </div>

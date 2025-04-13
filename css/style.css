@@ -25,7 +25,7 @@ a:hover {
 }
 
 header {
-    background-color: #f8c1d1;
+    background-color: #ff6e97;
     padding: 20px;
     text-align: center;
 }
@@ -294,7 +294,7 @@ nav {
         top: 0;
         left: -100%;
         flex-direction: column;
-        background-color: #f8c1d1;
+        background-color: #fc739a;
         width: 80%;
         height: 100vh;
         padding: 80px 20px 30px;
@@ -327,6 +327,38 @@ nav {
     
     .mobile-menu-toggle.active span:nth-child(3) {
         transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;             /* Larghezza del pannello menu */
+        height: 100vh;
+        background-color: #fa4b7c;  /* Colore sfondo del pannello */
+        padding: 100px 28px 28px;   /* Spaziatura interna del menu */
+        transition: right 0.3s ease;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    }
+
+    .nav-links li {
+        margin: 20px 0;    /* Spazio tra le voci del menu */
+    }
+
+    .nav-links a {
+        width: 100%;
+        justify-content: center;
+        font-size: 1.2rem;      /* Dimensione testo dei link */
+        padding: 15px 20px;     /* Padding dei bottoni */
+        color: white;           /* Colore testo */
+        background-color: rgba(206, 201, 201, 0.2);  /* Sfondo dei bottoni */
+        border-radius: 25px;    /* Arrotondamento bottoni */
+    }
+
+    .nav-links a i {
+        margin-right: 10px;     /* Spazio tra icona e testo */
+        font-size: 1.3rem;      /* Dimensione icone */
     }
 }
 
@@ -410,7 +442,7 @@ nav {
 
 /* Header */
 .site-header {
-    background-color: #f8c1d1;
+    background-color: #fb3870;
     padding: 20px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -568,7 +600,8 @@ nav {
     font-weight: bold;
     color: #d4af37;
     margin-top: 1rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    font-style: italic;
 }
 
 /* Mobile styles */
@@ -613,7 +646,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background-color: #f8c1d1;
+    background-color: #f85a87;
 }
 
 .nav-links {
@@ -714,18 +747,18 @@ nav {
     padding: 10px;
     margin-right: 15px;
     position: absolute;
-    right: 10px;
-    top: 50%;
+    right: 8px;    /* Distanza dal bordo destro */
+    top: 50%;       /* Posizione verticale */
     transform: translateY(-50%);
     z-index: 1001;
 }
 
 .mobile-menu-toggle span {
     display: block;
-    width: 30px;
-    height: 3px;
-    margin: 6px 0;
-    background-color: white;
+    width: 30px;          /* Larghezza delle linee */
+    height: 3px;          /* Spessore delle linee */
+    margin: 6px 0;        /* Spazio tra le linee */
+    background-color: rgb(0, 0, 0);  /* Colore delle linee */
     transition: 0.4s;
     border-radius: 3px;
 }
@@ -739,10 +772,10 @@ nav {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
+        width: 80%;             /* Larghezza del menu */
         height: 100vh;
-        background-color: #f8c1d1;
-        padding: 100px 30px 30px;
+        background-color: #ff5787;  /* Colore sfondo menu */
+        padding: 100px 30px 30px;   /* Spaziature interne */
         transition: right 0.3s ease;
         z-index: 1000;
         box-shadow: -5px 0 15px rgba(0,0,0,0.1);
