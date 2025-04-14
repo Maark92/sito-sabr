@@ -1165,12 +1165,11 @@ nav {
         width: 300px;
         height: 300px;
         margin: 0 auto 1rem;
-        transform: translateX(0); /* Rimuove eventuali spostamenti */
     }
     
     .before-after-slider img {
-        transform: translate(-50%, -55%);
-        object-position: center; /* Forza il centraggio su mobile */
+        transform: translate(-45%, -50%); /* Torniamo al centraggio perfetto */
+        object-position: center;
     }
 }
 
