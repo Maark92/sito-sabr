@@ -606,8 +606,8 @@ nav {
     }
 
     .service-card img {
-        width: 280px;    /* Dimensione immagine quasi quanto la card */
-        height: 280px;   /* Mantieni proporzione quadrata */
+        width: 250px;    /* Dimensione immagine quasi quanto la card */
+        height: 250px;   /* Mantieni proporzione quadrata */
         margin-bottom: 1rem;
     }
 }
