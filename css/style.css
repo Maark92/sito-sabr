@@ -1090,6 +1090,9 @@ nav {
     margin: 0 auto 1rem;
     border: 1px solid #fa88a8b9;
     box-shadow: 0 0 10px rgba(233, 30, 99, 0.2);
+    display: flex;         /* Aggiunto */
+    justify-content: center;  /* Aggiunto */
+    align-items: center;     /* Aggiunto */
 }
 
 .before-after-slider::before,
@@ -1174,8 +1177,24 @@ nav {
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .before-after-slider {
-        width: 250px;    /* Dimensione per mobile */
-        height: 250px;   /* Dimensione per mobile */
+        width: 200px;    /* Ridotto per evitare overflow */
+        height: 200px;   /* Ridotto per evitare overflow */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .before-after-slider img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 }
 
