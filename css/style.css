@@ -559,27 +559,23 @@ nav {
         padding: 0.5rem;
         width: 100%;
         max-width: 100%;
+        margin: 0;  /* Rimuovi auto per allineare a sinistra */
     }
 
     .service-grid {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;  /* Allinea a sinistra invece che al centro */
         gap: 1.5rem;
-        padding: 0;
+        padding: 0 1rem;  /* Aggiungi padding orizzontale */
         width: 100%;
     }
 
     .service-card {
-        width: 85%;
-        max-width: 250px;
+        width: 100%;
+        max-width: none;  /* Rimuovi max-width */
         padding: 1rem;
-        margin: 0;
-    }
-
-    .service-card img {
-        width: 220px;
-        height: 220px;
+        margin: 0;  /* Rimuovi margini automatici */
     }
 }
 
@@ -858,7 +854,7 @@ nav {
     padding: 1rem;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0;  /* Rimuovi auto per allineare a sinistra */
 }
 
 .service-card {
@@ -1169,6 +1165,13 @@ nav {
     margin: 0 auto 1rem;
     border: 1px solid #fa88a8b9;
     box-shadow: 0 0 10px rgba(233, 30, 99, 0.2);
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .before-after-slider img {
