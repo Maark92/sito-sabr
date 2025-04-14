@@ -932,6 +932,19 @@ nav {
     font-style: italic;
 }
 
+/* Desktop service card styles */
+.service-card {
+    width: 250px;    /* Modifica la larghezza del container della card */
+    padding: 1rem;   /* Modifica lo spazio interno della card */
+}
+
+.service-card img {
+    width: 200px;    /* Modifica la larghezza dell'immagine */
+    height: 200px;   /* Modifica l'altezza dell'immagine */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
     .site-header {
@@ -997,6 +1010,16 @@ nav {
     .service-card {
         margin-left: 0;  /* 0 = sinistra, auto = centro */
         width: calc(100% - 2rem);  /* Larghezza con spazio ai lati */
+    }
+
+    .service-card {
+        width: 230px;    /* Larghezza card su mobile */
+        padding: 0.8rem;
+    }
+
+    .service-card img {
+        width: 150px;    /* Larghezza immagine su mobile */
+        height: 150px;   /* Altezza immagine su mobile */
     }
 }
 
