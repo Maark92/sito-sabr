@@ -554,6 +554,33 @@ nav {
         padding: 1rem;
         gap: 1rem;
     }
+
+    .services-container, .servizi-container {
+        padding: 0.5rem;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .service-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0;
+        width: 100%;
+    }
+
+    .service-card {
+        width: 85%;
+        max-width: 250px;
+        padding: 1rem;
+        margin: 0;
+    }
+
+    .service-card img {
+        width: 220px;
+        height: 220px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1190,7 +1217,7 @@ nav {
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-.slider-handle::after {
+slider-handle::after {
     content: '';
     position: absolute;
     width: 40px;
