@@ -283,19 +283,34 @@
             try {
                 const backgroundImageURL = localStorage.getItem('backgroundImageURL');
                 if (backgroundImageURL) {
-                    document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
-                    document.body.style.backgroundSize = 'cover';
-                    document.body.style.backgroundPosition = 'center';
+                    // Precarica l'immagine per assicurarsi che sia disponibile
+                    const img = new Image();
+                    img.onload = function() {
+                        document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.backgroundPosition = 'center';
+                        document.body.style.backgroundAttachment = 'fixed';
+                        // Forza il refresh del rendering
+                        document.body.style.display = 'none';
+                        document.body.offsetHeight; // Force reflow
+                        document.body.style.display = '';
+                    };
+                    img.src = backgroundImageURL;
+
+                    // Backup in caso di errore nel caricamento dell'immagine
+                    img.onerror = function() {
+                        console.error('Errore nel caricamento dell\'immagine di sfondo');
+                        document.body.style.backgroundImage = `url('../images/sfondo.jpg')`;
+                    };
                 }
             } catch (error) {
                 console.error('Errore nel caricamento dello sfondo:', error);
+                // Fallback all'immagine di default
+                document.body.style.backgroundImage = `url('../images/sfondo.jpg')`;
             }
         });
     </script>
 
-    
-
-    
     <!-- Script per il menu mobile -->
     <script src="./js/menu.js"></script>
     <!-- Script per il before/after slider -->

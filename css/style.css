@@ -496,6 +496,15 @@ nav {
     header {
         margin-top: 35px;
     }
+
+    body {
+        background-attachment: scroll !important; /* Forza lo scroll su mobile */
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        min-height: 100vh;
+    }
 }
 
 @media (max-width: 480px) {
