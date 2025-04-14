@@ -401,4 +401,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             backgroundMessage.textContent = 'Errore imprevisto. Riprova.';
         }
     });
+
+    async function updateBackgroundImage(imageUrl) {
+        try {
+            const { error } = await supabase
+                .from('settings')
+                .upsert({ 
+                    key: 'backgroundImage',
+                    value: imageUrl 
+                });
+
+            if (error) throw error;
+            
+            // Aggiorna il localStorage per la preview immediata nella dashboard
+            localStorage.setItem('backgroundImageURL', imageUrl);
+            
+        } catch (error) {
+            console.error('Errore nell\'aggiornamento dello sfondo:', error);
+        }
+    }
 });

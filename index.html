@@ -278,37 +278,61 @@
     </script>
 
     <!-- Script per lo sfondo -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const backgroundImageURL = localStorage.getItem('backgroundImageURL');
-                if (backgroundImageURL) {
-                    // Precarica l'immagine per assicurarsi che sia disponibile
-                    const img = new Image();
-                    img.onload = function() {
-                        document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
-                        document.body.style.backgroundSize = 'cover';
-                        document.body.style.backgroundPosition = 'center';
-                        document.body.style.backgroundAttachment = 'fixed';
-                        // Forza il refresh del rendering
-                        document.body.style.display = 'none';
-                        document.body.offsetHeight; // Force reflow
-                        document.body.style.display = '';
-                    };
-                    img.src = backgroundImageURL;
+    <script type="module">
+        import { supabase } from './js/supabaseClient.js';
 
-                    // Backup in caso di errore nel caricamento dell'immagine
-                    img.onerror = function() {
-                        console.error('Errore nel caricamento dell\'immagine di sfondo');
-                        document.body.style.backgroundImage = `url('../images/sfondo.jpg')`;
-                    };
+        async function loadBackgroundImage() {
+            const defaultBackground = 'https://i.postimg.cc/T50WMC6C/sfondo.jpg'; // URL diretto all'immagine
+
+            try {
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('value')
+                    .eq('key', 'backgroundImage')
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                // Se abbiamo trovato un valore, convertiamo l'URL se necessario
+                let backgroundImageURL = data?.value || defaultBackground;
+                
+                // Converti URL postimg se necessario
+                if (backgroundImageURL.includes('postimg.cc') && !backgroundImageURL.includes('i.postimg.cc')) {
+                    backgroundImageURL = backgroundImageURL.replace('postimg.cc', 'i.postimg.cc');
+                    if (!backgroundImageURL.endsWith('.jpg')) {
+                        backgroundImageURL += '/sfondo.jpg';
+                    }
                 }
+
+                const img = new Image();
+                
+                img.onload = function() {
+                    document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundAttachment = 'fixed';
+                    
+                    if (/Mobi|Android/i.test(navigator.userAgent)) {
+                        document.body.style.display = 'none';
+                        document.body.offsetHeight;
+                        document.body.style.display = '';
+                    }
+                };
+
+                img.onerror = function() {
+                    console.error('Errore nel caricamento dell\'immagine di sfondo:', backgroundImageURL);
+                    document.body.style.backgroundImage = `url('${defaultBackground}')`;
+                };
+
+                img.src = backgroundImageURL;
+
             } catch (error) {
                 console.error('Errore nel caricamento dello sfondo:', error);
-                // Fallback all'immagine di default
-                document.body.style.backgroundImage = `url('../images/sfondo.jpg')`;
+                document.body.style.backgroundImage = `url('${defaultBackground}')`;
             }
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBackgroundImage);
     </script>
 
     <!-- Script per il menu mobile -->
