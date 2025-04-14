@@ -1013,13 +1013,13 @@ nav {
     }
 
     .service-card {
-        width: 230px;    /* Larghezza card su mobile */
+        width: 280px;    /* Larghezza card su mobile */
         padding: 0.8rem;
     }
 
     .service-card img {
-        width: 150px;    /* Larghezza immagine su mobile */
-        height: 150px;   /* Altezza immagine su mobile */
+        width: 130px;    /* Larghezza immagine su mobile */
+        height: 130px;   /* Altezza immagine su mobile */
     }
 }
 
