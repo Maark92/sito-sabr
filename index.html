@@ -11,6 +11,24 @@
     <script type="module" src="./js/supabaseClient.js"></script>
 </head>
 <body>
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span><i class="fas fa-gift"></i> OFFERTA SPECIALE: Prenota online e ricevi il 10% di sconto! <i class="fas fa-gift"></i></span>
+            <span><i class="fas fa-gift"></i> OFFERTA SPECIALE: Prenota online e ricevi il 10% di sconto! <i class="fas fa-gift"></i></span>
+            <span><i class="fas fa-gift"></i> OFFERTA SPECIALE: Prenota online e ricevi il 10% di sconto! <i class="fas fa-gift"></i></span>
+            <span><i class="fas fa-gift"></i> OFFERTA SPECIALE: Prenota online e ricevi il 10% di sconto! <i class="fas fa-gift"></i></span>
+        </div>
+    </div>
+    <div class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-close">&times;</div>
+            <h2>Offerta Speciale!</h2>
+            <p>Prenota il tuo trattamento online e, per la prima volta, riceverai uno</p>
+            <div class="popup-discount">SCONTO DEL 10%</div>
+            <p>su tutti i nostri servizi!</p>
+            <a href="#prenotazioni" class="popup-button">Prenota Ora</a>
+        </div>
+    </div>
     <header>
         <nav class="navigation">
             <h1><i class="fas fa-hand-sparkles"></i> Con Strass o Senza</h1>
@@ -23,7 +41,7 @@
             
             <ul class="nav-links">
                 <li><a href="#servizi"><i class="fas fa-concierge-bell"></i> Servizi</a></li>
-                <li><a href="#galleria"><i class="fas fa-images"></i> Galleria</a></li>
+                <li><a href="#contatti"><i class="fas fa-address-card"></i> Contatti</a></li>
                 <li><a href="#prenotazioni"><i class="fas fa-calendar-alt"></i> Prenotazioni</a></li>
                 <li><a href="dashboard.html" class="dashboard-button"><i class="fas fa-user-cog"></i> Dashboard</a></li>
             </ul>
@@ -52,20 +70,43 @@
             </select>
             <label for="notes">Note:</label>
             <textarea id="notes" name="notes" rows="3" placeholder="Scrivi eventuali richieste o note..."></textarea>
+            <div class="privacy-notice">
+                <p><small>I dati personali (nome e telefono) vengono utilizzati esclusivamente dal titolare del servizio per gestire le prenotazioni e non verranno mai condivisi con terze parti. Non utilizziamo cookie di profilazione. Per maggiori informazioni contattaci.</small></p>
+                <label class="privacy-consent">
+                    <input type="checkbox" required name="privacy-consent">
+                    Ho letto e accetto la privacy policy
+                </label>
+            </div>
             <button type="submit"><i class="fas fa-check-circle"></i> Prenota</button>
         </form>
         <p id="booking-message"></p>
     </section>
 
-    <section id="galleria" class="section">
-        <h2>Galleria</h2>
-        <p>Foto dei nostri lavori.</p>
-        <div class="galleria-container">
-            <img src="./images/gallery1.jpg" alt="Galleria 1">
-            <img src="./images/gallery2.jpg" alt="Galleria 2">
-            <img src="./images/gallery3.jpg" alt="Galleria 3">
+    <section id="contatti" class="section">
+        <h2><i class="fas fa-address-card"></i> Contatti e Chi Sono</h2>
+        
+        <div class="contact-info">
+            <div class="contact-details">
+                <p><i class="fas fa-phone"></i> <a href="tel:3299362917">329 936 2917</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:sabrypalermo00@gmail.com">sabrypalermo00@gmail.com</a></p>
+            </div>
+    
+            <div class="about-me">
+                <h3>Chi Sono</h3>
+                <img src="./images/sabrina-profile.jpg" alt="Sabrina Onicotecnica" class="profile-image">
+                <p>Ciao, sono Sabrina, e la mia passione per le unghie è nata quando ero solo una bambina.</p>
+                <p>A 12 anni già sperimentavo su me stessa e sui miei parenti, e oggi quella passione è diventata il mio lavoro.</p>
+                <p>Da due anni mi dedico con amore e precisione al mondo nails, con uno stile che punta all'eleganza e alla cura dei dettagli. Amo in particolare la forma a mandorla, che realizzo seguendo ogni parametro tecnico, sempre alla ricerca della perfezione.</p>
+                <p>Quello che mi rende felice? Il sorriso delle mie clienti, la loro soddisfazione, e la magia di trasformare una manicure in un momento speciale per sentirsi più belle e sicure.</p>
+                <p>Mi descrivono come una persona vivace, disponibile e attenta, e ci tengo a far sentire ogni cliente a proprio agio, valorizzata e coccolata.</p>
+                <blockquote>
+                    "La passione non si insegna, si sente — ed è quella che fa la differenza."
+                </blockquote>
+                <p>Ed è proprio da qui che nasce ogni mio lavoro.</p>
+            </div>
         </div>
     </section>
+  
 
    
     <footer class="site-footer">
@@ -81,7 +122,8 @@
             try {
                 const { data: availability, error } = await supabase
                     .from('availability')
-                    .select('date');
+                    .select('date')
+                    .order('date', { ascending: true }); // Ordiniamo le date
 
                 if (error) {
                     console.error('Errore nel caricamento delle date:', error);
@@ -91,9 +133,18 @@
                 const uniqueDates = [...new Set(availability.map(item => item.date))];
                 const dateSelect = document.getElementById('date');
                 if (dateSelect) {
-                    dateSelect.innerHTML = uniqueDates.map(date => `
-                        <option value="${date}">${date}</option>
-                    `).join('');
+                    dateSelect.innerHTML = `
+                        <option value="" disabled selected>Seleziona una data</option>
+                        ${uniqueDates.map(date => `
+                            <option value="${date}">${date}</option>
+                        `).join('')}
+                    `;
+
+                    // Se c'è una sola data disponibile, selezionala automaticamente
+                    if (uniqueDates.length === 1) {
+                        dateSelect.value = uniqueDates[0];
+                        loadTimesForDate(uniqueDates[0]);
+                    }
                 }
             } catch (err) {
                 console.error('Errore imprevisto durante il caricamento delle date:', err);
@@ -106,7 +157,8 @@
                 const { data: availability, error: availabilityError } = await supabase
                     .from('availability')
                     .select('time')
-                    .eq('date', selectedDate);
+                    .eq('date', selectedDate)
+                    .order('time', { ascending: true }); // Ordiniamo gli orari
 
                 if (availabilityError) {
                     console.error('Errore nel caricamento degli orari disponibili:', availabilityError);
@@ -194,37 +246,24 @@
                     return;
                 }
 
-                const servicesContainer = document.querySelector('.services-container, .servizi-container');
+                const servicesContainer = document.querySelector('.services-container');
                 if (servicesContainer && treatments) {
-                    // Raggruppa i trattamenti per categoria
-                    const categories = {
-                        'Manicure': treatments.filter(t => t.name.toLowerCase().includes('manicure')),
-                        'Pedicure': treatments.filter(t => t.name.toLowerCase().includes('pedicure')),
-                        'Ricostruzione': treatments.filter(t => t.name.toLowerCase().includes('ricostruzione')),
-                        'Altri Servizi': treatments.filter(t => 
-                            !t.name.toLowerCase().includes('manicure') && 
-                            !t.name.toLowerCase().includes('pedicure') && 
-                            !t.name.toLowerCase().includes('ricostruzione')
-                        )
-                    };
-
-                    servicesContainer.innerHTML = Object.entries(categories)
-                        .filter(([_, items]) => items.length > 0) // Mostra solo categorie non vuote
-                        .map(([category, items]) => `
-                            <div class="services-category">
-                                <h3>${category}</h3>
-                                <div class="service-grid">
-                                    ${items.map(treatment => `
-                                        <div class="service-card">
-                                            <img src="${treatment.image_url}" alt="${treatment.name}">
-                                            <h3>${treatment.name}</h3>
-                                            <p>${treatment.description}</p>
-                                            <p class="price">Prezzo a partire da €${treatment.price.toFixed(2)}</p>
-                                        </div>
-                                    `).join('')}
+                    servicesContainer.innerHTML = `
+                        <div class="service-grid">
+                            ${treatments.map(treatment => `
+                                <div class="service-card">
+                                    <div class="before-after-slider">
+                                        <img class="before-image" src="${treatment.before_image || treatment.image_url}" alt="Prima">
+                                        <div class="slider-handle"></div>
+                                        <img class="after-image" src="${treatment.after_image || treatment.image_url}" alt="Dopo">
+                                    </div>
+                                    <h3>${treatment.name}</h3>
+                                    <p>${treatment.description}</p>
+                                    <p class="price">Prezzo a partire da €${treatment.price.toFixed(2)}</p>
                                 </div>
-                            </div>
-                        `).join('');
+                            `).join('')}
+                        </div>
+                    `;
                 }
             } catch (err) {
                 console.error('Errore imprevisto:', err);
@@ -253,8 +292,53 @@
             }
         });
     </script>
+
+    
+
     
     <!-- Script per il menu mobile -->
     <script src="./js/menu.js"></script>
+    <!-- Script per il before/after slider -->
+    <script src="./js/slider.js"></script>
+
+    <!-- Script per il popup -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verifica se il popup è già stato mostrato in questa sessione
+            if (!sessionStorage.getItem('popupMostrato')) {
+                // Mostra il popup dopo 2 secondi
+                setTimeout(function() {
+                    document.querySelector('.popup-overlay').classList.add('active');
+                }, 2000);
+
+                // Salva che il popup è stato mostrato
+                sessionStorage.setItem('popupMostrato', 'true');
+            }
+
+            // Chiudi popup quando si clicca sulla X
+            document.querySelector('.popup-close').addEventListener('click', function() {
+                document.querySelector('.popup-overlay').classList.remove('active');
+            });
+
+            // Chiudi popup quando si clicca fuori
+            document.querySelector('.popup-overlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- Gestione smooth scroll per il pulsante del popup -->
+    <script>
+        document.querySelector('.popup-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#prenotazioni').scrollIntoView({
+                behavior: 'smooth'
+            });
+            // Chiudi il popup dopo il click
+            document.querySelector('.popup-overlay').classList.remove('active');
+        });
+    </script>
 </body>
 </html>

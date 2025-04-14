@@ -131,26 +131,66 @@
                     <input type="number" id="treatment-price" name="price" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="treatment-image">Immagine (URL):</label>
-                    <input type="url" id="treatment-image" name="image_url" required>
+                    <label for="treatment-before-image">Immagine Prima (URL):</label>
+                    <input type="url" id="treatment-before-image" name="before_image" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-after-image">Immagine Dopo (URL):</label>
+                    <input type="url" id="treatment-after-image" name="after_image" required>
                 </div>
                 <button type="submit" class="btn">Aggiungi Trattamento</button>
             </form>
-            <table id="trattamenti-table" class="dashboard-table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Descrizione</th>
-                        <th>Prezzo</th>
-                        <th>Immagine</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Trattamenti caricati dinamicamente -->
-                    <!-- Le immagini avranno la classe "treatment-img" -->
-                </tbody>
-            </table>
+            <div class="service-grid">
+                <table id="trattamenti-table" class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Prezzo</th>
+                            <th>Immagine Prima</th>
+                            <th>Immagine Dopo</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Trattamenti caricati dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Form di modifica trattamento (nascosto di default) -->
+            <div id="edit-treatment-modal" class="modal">
+                <div class="modal-content">
+                    <h3>Modifica Trattamento</h3>
+                    <form id="edit-treatment-form" class="dashboard-form">
+                        <input type="hidden" id="edit-treatment-id">
+                        <div class="form-group">
+                            <label for="edit-treatment-name">Nome Trattamento:</label>
+                            <input type="text" id="edit-treatment-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-treatment-description">Descrizione:</label>
+                            <textarea id="edit-treatment-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-treatment-price">Prezzo (€):</label>
+                            <input type="number" id="edit-treatment-price" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-treatment-before-image">Immagine Prima (URL):</label>
+                            <input type="url" id="edit-treatment-before-image" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-treatment-after-image">Immagine Dopo (URL):</label>
+                            <input type="url" id="edit-treatment-after-image" required>
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="submit" class="btn">Salva Modifiche</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </section>
 
         <!-- Gestione Sfondo -->
@@ -586,19 +626,64 @@
                             <td>${treatment.name}</td>
                             <td>${treatment.description}</td>
                             <td>€${treatment.price.toFixed(2)}</td>
-                            <td><img src="${treatment.image_url}" alt="${treatment.name}" class="treatment-img"></td>
+                            <td><img src="${treatment.before_image}" alt="Prima" class="treatment-img"></td>
+                            <td><img src="${treatment.after_image}" alt="Dopo" class="treatment-img"></td>
                             <td>
+                                <button onclick="editTreatment(${JSON.stringify(treatment).replace(/"/g, '&quot;')})">Modifica</button>
                                 <button onclick="deleteTreatment(${treatment.id})">Elimina</button>
                             </td>
                         </tr>
                     `).join('');
-
-                    return treatments;
                 } catch (err) {
-                    console.error('Errore imprevisto durante il caricamento dei trattamenti:', err);
-                    return [];
+                    console.error('Errore nel caricamento dei trattamenti:', err);
                 }
             };
+
+            // Funzione per aprire il modal di modifica
+            window.editTreatment = (treatment) => {
+                document.getElementById('edit-treatment-id').value = treatment.id;
+                document.getElementById('edit-treatment-name').value = treatment.name;
+                document.getElementById('edit-treatment-description').value = treatment.description;
+                document.getElementById('edit-treatment-price').value = treatment.price;
+                document.getElementById('edit-treatment-before-image').value = treatment.before_image;
+                document.getElementById('edit-treatment-after-image').value = treatment.after_image;
+                document.getElementById('edit-treatment-modal').style.display = 'block';
+            };
+
+            // Funzione per chiudere il modal
+            window.closeEditModal = () => {
+                document.getElementById('edit-treatment-modal').style.display = 'none';
+            };
+
+            // Gestione del form di modifica
+            document.getElementById('edit-treatment-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById('edit-treatment-id').value;
+                const updates = {
+                    name: document.getElementById('edit-treatment-name').value,
+                    description: document.getElementById('edit-treatment-description').value,
+                    price: parseFloat(document.getElementById('edit-treatment-price').value),
+                    before_image: document.getElementById('edit-treatment-before-image').value,
+                    after_image: document.getElementById('edit-treatment-after-image').value
+                };
+
+                try {
+                    const { error } = await supabase
+                        .from('treatments')
+                        .update(updates)
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    closeEditModal();
+                    await loadTreatments();
+                    alert('Trattamento aggiornato con successo!');
+                } catch (err) {
+                    console.error('Errore durante l\'aggiornamento:', err);
+                    alert('Errore durante l\'aggiornamento del trattamento');
+                }
+            });
 
             // Funzione per eliminare un trattamento
             window.deleteTreatment = async (id) => {
@@ -626,7 +711,8 @@
                 const name = document.getElementById('treatment-name').value;
                 const description = document.getElementById('treatment-description').value;
                 const price = parseFloat(document.getElementById('treatment-price').value);
-                const image_url = document.getElementById('treatment-image').value;
+                const before_image = document.getElementById('treatment-before-image').value;
+                const after_image = document.getElementById('treatment-after-image').value;
 
                 try {
                     const { error } = await supabase
@@ -635,7 +721,8 @@
                             name, 
                             description, 
                             price, 
-                            image_url
+                            before_image,
+                            after_image
                         }]);
 
                     if (error) {
@@ -645,10 +732,11 @@
                     }
 
                     document.getElementById('add-treatment-form').reset();
-                    await window.loadTreatments();
+                    await loadTreatments();
                     alert('Trattamento aggiunto con successo!');
                 } catch (err) {
                     console.error('Errore imprevisto durante l\'aggiunta del trattamento:', err);
+                    alert('Errore imprevisto durante l\'aggiunta del trattamento');
                 }
             });
 
