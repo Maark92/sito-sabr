@@ -528,6 +528,32 @@ nav {
         max-width: 300px;  /* Aggiungiamo un max-width per la card */
         margin: 0 auto;    /* Centramento orizzontale */
     }
+
+    .service-grid {
+        grid-template-columns: 1fr;
+        padding: 0;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .service-card {
+        width: 90%;
+        max-width: 260px;
+        margin: 0 auto;
+        padding: 0.8rem;
+    }
+
+    .service-card img {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 0.8rem;
+    }
+
+    .services-container, .servizi-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
