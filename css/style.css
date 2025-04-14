@@ -882,6 +882,25 @@ nav {
     .site-header nav li a i {
         font-size: 1.1rem;
     }
+
+    .service-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+        gap: 1rem;
+        width: 95%; /* Riduce la larghezza su mobile */
+    }
+
+    .service-card {
+        width: 95%;
+        max-width: 280px; /* Ridotta da 300px a 280px */
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .service-card img {
+        width: 230px; /* Ridotta la larghezza */
+        height: 230px; /* Ridotta l'altezza */
+    }
 }
 
 @media (max-width: 480px) {
@@ -1168,7 +1187,7 @@ nav {
     }
     
     .before-after-slider img {
-        transform: translate(-40%, -50%); /* Sposta l'immagine più a sinistra */
+        transform: translate(-50%, -50%); /* Sposta l'immagine più a sinistra */
         object-position: center;
     }
 }
