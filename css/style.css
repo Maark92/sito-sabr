@@ -1169,7 +1169,7 @@ nav {
     }
     
     .before-after-slider img {
-        transform: translate(-50%, -45%);
+        transform: translate(-50%, -55%);
         object-position: center; /* Forza il centraggio su mobile */
     }
 }
