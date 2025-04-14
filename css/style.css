@@ -577,6 +577,26 @@ nav {
         padding: 1rem;
         margin: 0;  /* Rimuovi margini automatici */
     }
+
+    .services-container, .servizi-container {
+        padding: 0.5rem;
+        margin-left: -1rem;  /* Valore negativo per spostare a sinistra */
+        width: calc(100% - 2rem);
+    }
+
+    .service-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 0;
+        margin-left: -1rem;  /* Anche qui valore negativo */
+    }
+
+    .service-card {
+        margin-left: -1rem;  /* Sposta la singola card a sinistra */
+        width: calc(100% - 1rem);  /* Ridotto per compensare il margin negativo */
+    }
 }
 
 @media (max-width: 480px) {
@@ -826,6 +846,15 @@ nav {
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Service Grid - Desktop */
+.services-container, .servizi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    margin-left: 2rem;  /* Aggiungi questo per spostare a destra */
+}
+
 .services-container, .servizi-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -949,6 +978,25 @@ nav {
     .service-card img {
         width: 230px; /* Ridotta la larghezza */
         height: 230px; /* Ridotta l'altezza */
+    }
+
+    .services-container, .servizi-container {
+        padding: 0.5rem;
+        margin-left: 1rem;  /* Controlla spostamento su mobile */
+        width: calc(100% - 2rem);  /* Compensare il margin */
+    }
+
+    .service-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;  /* flex-start = sinistra, center = centro, flex-end = destra */
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .service-card {
+        margin-left: 0;  /* 0 = sinistra, auto = centro */
+        width: calc(100% - 2rem);  /* Larghezza con spazio ai lati */
     }
 }
 
