@@ -597,6 +597,19 @@ nav {
         margin-left: -1rem;  /* Sposta la singola card a sinistra */
         width: calc(100% - 1rem);  /* Ridotto per compensare il margin negativo */
     }
+
+    /* Card dimensions per mobile */
+    .service-card {
+        width: 350px;    /* Aumenta la larghezza della card su mobile */
+        padding: 1rem;
+        margin: 0;       /* Rimuovi i margini automatici */
+    }
+
+    .service-card img {
+        width: 280px;    /* Dimensione immagine quasi quanto la card */
+        height: 280px;   /* Mantieni proporzione quadrata */
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
