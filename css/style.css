@@ -1168,7 +1168,7 @@ nav {
     }
     
     .before-after-slider img {
-        transform: translate(-45%, -50%); /* Torniamo al centraggio perfetto */
+        transform: translate(-60%, -50%); /* Torniamo al centraggio perfetto */
         object-position: center;
     }
 }
