@@ -635,7 +635,7 @@ nav {
         object-fit: cover;
         border-radius: 10px;
         margin-bottom: 0.7rem;
-        display: block;
+        display: flex;
         box-shadow: 0 2px 8px rgba(233,30,99,0.08);
     }
 
@@ -848,7 +848,7 @@ nav {
 
     .before-after-slider {
         width: 98vw;
-        max-width: 260px;
+        max-width: 250px;
         height: 120px;
         min-width: 120px;
         border-radius: 8px;
@@ -1539,7 +1539,7 @@ nav {
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .before-after-slider {
-        width: 270px;
+        width: 250px;
         height: 280px;
         margin-left: auto;
         margin-right: auto;
