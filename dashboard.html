@@ -202,6 +202,23 @@
                 <button type="submit">Aggiorna Sfondo</button>
             </form>
             <p id="background-message"></p>
+            <!-- Nella sezione "Gestione Sfondo" puoi usare qualsiasi URL di immagine accessibile pubblicamente. -->
+            <!-- I formati consigliati per lo sfondo sono: -->
+            <!-- JPG/JPEG (consigliato per fotografie, buona compressione) -->
+            <!-- PNG (consigliato per immagini con trasparenza, ma più pesante) -->
+            <!-- WEBP (moderno, ottima qualità e compressione, ma non supportato da tutti i browser vecchi) -->
+            <!-- Evita GIF e SVG per lo sfondo principale. -->
+            <!-- L'URL deve terminare con .jpg, .jpeg, .png o .webp e deve essere accessibile senza autenticazione. -->
+            <!-- Esempio valido: https://esempio.com/immagine.jpg -->
+            <!-- Nella sezione "Gestione Sfondo" puoi usare qualsiasi URL di immagine accessibile pubblicamente.
+                 Dimensioni consigliate per lo sfondo:
+                 - Risoluzione consigliata: almeno 1920x1080 pixel (Full HD) per una buona resa su desktop.
+                 - Rapporto consigliato: 16:9 oppure 4:3 (ma va bene anche verticale su mobile).
+                 - Peso file: meglio sotto i 500 KB per velocità di caricamento.
+                 - L'immagine verrà adattata a tutto lo schermo (background-size: cover), quindi evita scritte o dettagli importanti ai bordi.
+                 - L'immagine deve essere accessibile senza autenticazione.
+                 Esempio valido: https://esempio.com/immagine.jpg
+            -->
         </section>
 
         <!-- Gestione Galleria -->
@@ -262,7 +279,7 @@
             };
 
             // Gestione del caricamento dello sfondo
-            document.getElementById('background-form').addEventListener('submit', (event) => {
+            document.getElementById('background-form').addEventListener('submit', async (event) => {
                 event.preventDefault();
                 const backgroundUrl = document.getElementById('background-url').value;
 
@@ -272,10 +289,19 @@
                 }
 
                 try {
-                    // Salva l'URL dello sfondo in localStorage
-                    localStorage.setItem('backgroundImageURL', backgroundUrl);
+                    // Salva l'URL dello sfondo su Supabase nella tabella settings
+                    const { error } = await supabase
+                        .from('settings')
+                        .upsert([{ key: 'backgroundImage', value: backgroundUrl }], { onConflict: ['key'] });
+
+                    if (error) {
+                        console.error('Errore durante l\'aggiornamento dello sfondo:', error);
+                        document.getElementById('background-message').textContent = 'Errore durante l\'aggiornamento dello sfondo.';
+                        return;
+                    }
+
                     document.getElementById('background-message').textContent = 'Sfondo aggiornato con successo!';
-                    console.log('Nuovo URL dello sfondo:', backgroundUrl);
+                    console.log('Nuovo URL dello sfondo salvato su Supabase:', backgroundUrl);
                 } catch (error) {
                     console.error('Errore durante l\'aggiornamento dello sfondo:', error);
                     document.getElementById('background-message').textContent = 'Errore durante l\'aggiornamento dello sfondo.';

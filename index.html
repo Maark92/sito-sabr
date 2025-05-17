@@ -218,7 +218,7 @@
 
                     if (error) {
                         console.error('Errore durante la prenotazione:', error);
-                        document.getElementById('booking-message').textContent = 'Errore durante la prenotazione. Riprova.';
+                        document.getElementById('booking-message').textContent = 'Errore durante la prenotazione. Verifica la connessione o riprova più tardi.';
                         return;
                     }
 
@@ -228,7 +228,7 @@
                     await loadTimesForDate(date);
                 } catch (err) {
                     console.error('Errore imprevisto durante la prenotazione:', err);
-                    document.getElementById('booking-message').textContent = 'Errore imprevisto. Riprova.';
+                    document.getElementById('booking-message').textContent = 'Errore di comunicazione con il server. Riprova più tardi.';
                 }
             });
         }
@@ -246,6 +246,8 @@
                     return;
                 }
 
+                const fallbackImage = './images/fallback.jpg'; // Add a fallback image in your images folder
+
                 const servicesContainer = document.querySelector('.services-container');
                 if (servicesContainer && treatments) {
                     servicesContainer.innerHTML = `
@@ -253,13 +255,13 @@
                             ${treatments.map(treatment => `
                                 <div class="service-card">
                                     <div class="before-after-slider">
-                                        <img class="before-image" src="${treatment.before_image || treatment.image_url}" alt="Prima">
+                                        <img class="before-image" src="${treatment.before_image || treatment.image_url || fallbackImage}" alt="Prima">
                                         <div class="slider-handle"></div>
-                                        <img class="after-image" src="${treatment.after_image || treatment.image_url}" alt="Dopo">
+                                        <img class="after-image" src="${treatment.after_image || treatment.image_url || fallbackImage}" alt="Dopo">
                                     </div>
                                     <h3>${treatment.name}</h3>
                                     <p>${treatment.description}</p>
-                                    <p class="price">Prezzo a partire da €${treatment.price.toFixed(2)}</p>
+                                    <p class="price">Prezzo a partire da €${treatment.price ? treatment.price.toFixed(2) : 'N/A'}</p>
                                 </div>
                             `).join('')}
                         </div>
@@ -282,8 +284,8 @@
         import { supabase } from './js/supabaseClient.js';
 
         async function loadBackgroundImage() {
-            const defaultBackground = 'https://i.postimg.cc/T50WMC6C/sfondo.jpg'; // URL diretto all'immagine
-
+            // L'immagine di sfondo viene caricata SOLO tramite URL da Supabase.
+            // Se non è presente o c'è un errore, nessuno sfondo viene impostato.
             try {
                 const { data, error } = await supabase
                     .from('settings')
@@ -293,10 +295,15 @@
 
                 if (error) throw error;
 
-                // Se abbiamo trovato un valore, convertiamo l'URL se necessario
-                let backgroundImageURL = data?.value || defaultBackground;
-                
-                // Converti URL postimg se necessario
+                let backgroundImageURL = data?.value;
+
+                // Se non c'è URL valido, non impostare nessuno sfondo
+                if (!backgroundImageURL) {
+                    document.body.style.backgroundImage = '';
+                    return;
+                }
+
+                // Se l'URL è di postimg, sistemalo per essere diretto
                 if (backgroundImageURL.includes('postimg.cc') && !backgroundImageURL.includes('i.postimg.cc')) {
                     backgroundImageURL = backgroundImageURL.replace('postimg.cc', 'i.postimg.cc');
                     if (!backgroundImageURL.endsWith('.jpg')) {
@@ -305,13 +312,13 @@
                 }
 
                 const img = new Image();
-                
+
                 img.onload = function() {
                     document.body.style.backgroundImage = `url('${backgroundImageURL}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
                     document.body.style.backgroundAttachment = 'fixed';
-                    
+
                     if (/Mobi|Android/i.test(navigator.userAgent)) {
                         document.body.style.display = 'none';
                         document.body.offsetHeight;
@@ -321,14 +328,14 @@
 
                 img.onerror = function() {
                     console.error('Errore nel caricamento dell\'immagine di sfondo:', backgroundImageURL);
-                    document.body.style.backgroundImage = `url('${defaultBackground}')`;
+                    document.body.style.backgroundImage = '';
                 };
 
                 img.src = backgroundImageURL;
 
             } catch (error) {
                 console.error('Errore nel caricamento dello sfondo:', error);
-                document.body.style.backgroundImage = `url('${defaultBackground}')`;
+                document.body.style.backgroundImage = '';
             }
         }
 
