@@ -1,14 +1,15 @@
-import { supabaseClient } from './supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Configurazione di Supabase
-    const SUPABASE_URL = 'https://cikjhhbwxobypgofavuj.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpa2poaGJ3eG9ieXBnb2ZhdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTQ2MjYsImV4cCI6MjA1OTYzMDYyNn0.t1tegLTbzqX75EUdo1BboKgudq6SggYkshOM-6d2oEo'; // Sostituisci con la chiave anonima corretta
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     // Funzione per caricare i clienti
     const loadClients = async () => {
-        const { data: clients, error } = await supabaseClient
+        const clientiTable = document.getElementById('clienti-table');
+        if (!clientiTable) return; // Evita errori se la tabella non esiste
+
+        const clientiTableBody = clientiTable.querySelector('tbody');
+        if (!clientiTableBody) return; // Evita errori se tbody non esiste
+
+        const { data: clients, error } = await supabase
             .from('clients')
             .select('*');
 
@@ -17,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        const clientiTableBody = document.getElementById('clienti-table').querySelector('tbody');
         clientiTableBody.innerHTML = clients.map(client => `
             <tr>
                 <td>${client.name}</td>
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Funzione per eliminare un cliente
     const deleteClient = async (id) => {
-        const { error } = await supabaseClient
+        const { error } = await supabase
             .from('clients')
             .delete()
             .eq('id', id);
@@ -53,21 +53,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Funzione per caricare gli appuntamenti
     const loadAppointments = async () => {
-        const { data: appointments, error } = await supabaseClient
+        const appuntamentiTable = document.getElementById('appuntamenti-table');
+        if (!appuntamentiTable) return; // Evita errori se la tabella non esiste
+
+        const appuntamentiTableBody = appuntamentiTable.querySelector('tbody');
+        if (!appuntamentiTableBody) return; // Evita errori se tbody non esiste
+
+        const { data: appointments, error } = await supabase
             .from('appointments')
-            .select('*, clients(name)');
+            .select('*')
+            .order('date', { ascending: true });
 
         if (error) {
             console.error('Errore nel caricamento degli appuntamenti:', error);
             return;
         }
 
-        const appuntamentiTableBody = document.getElementById('appuntamenti-table').querySelector('tbody');
         appuntamentiTableBody.innerHTML = appointments.map(appointment => `
             <tr>
-                <td>${appointment.clients.name}</td>
-                <td>${appointment.date}</td>
-                <td>${appointment.time}</td>
+                <td>${appointment.client_name || ''}</td>
+                <td>${appointment.phone || ''}</td>
+                <td>${appointment.date || ''}</td>
+                <td>${appointment.time || ''}</td>
+                <td>${appointment.notes || ''}</td>
                 <td>
                     <button class="delete-appointment" data-id="${appointment.id}">Elimina</button>
                 </td>
@@ -86,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Funzione per eliminare un appuntamento
     const deleteAppointment = async (id) => {
-        const { error } = await supabaseClient
+        const { error } = await supabase
             .from('appointments')
             .delete()
             .eq('id', id);
@@ -102,10 +110,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault();
 
         const name = document.getElementById('client-name').value;
-        const email = document.getElementById('client-email').value;
+        const email = document.getElementById('client-email').value; // <-- CORRETTO QUI
         const phone = document.getElementById('client-phone').value;
 
-        const { error } = await supabaseClient
+        const { error } = await supabase
             .from('clients')
             .insert([{ name, email, phone }]);
 
@@ -123,13 +131,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     addAppointmentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const clientId = document.getElementById('appointment-client').value;
+        const clientName = document.getElementById('appointment-client-name').value.trim();
+        const phone = document.getElementById('appointment-phone').value.trim();
         const date = document.getElementById('appointment-date').value;
         const time = document.getElementById('appointment-time').value;
+        const notes = document.getElementById('appointment-notes').value.trim();
 
-        const { error } = await supabaseClient
+        // Inserisci client_name come campo testo libero
+        const appointmentData = { date, time };
+        if (clientName) {
+            appointmentData.client_name = clientName;
+        }
+        if (phone) {
+            appointmentData.phone = phone;
+        }
+        if (notes) {
+            appointmentData.notes = notes;
+        }
+
+        const { error } = await supabase
             .from('appointments')
-            .insert([{ client_id: clientId, date, time }]);
+            .insert([appointmentData]);
 
         if (error) {
             console.error('Errore nell\'aggiunta dell\'appuntamento:', error);
@@ -140,27 +162,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadAppointments();
     });
 
-    // Funzione per popolare il menu a tendina dei clienti nel modulo appuntamenti
-    const populateClientDropdown = async () => {
-        const { data: clients, error } = await supabaseClient
-            .from('clients')
-            .select('*');
-
-        if (error) {
-            console.error('Errore nel caricamento dei clienti per il menu a tendina:', error);
-            return;
-        }
-
-        const clientDropdown = document.getElementById('appointment-client');
-        clientDropdown.innerHTML = clients.map(client => `
-            <option value="${client.id}">${client.name}</option>
-        `).join('');
-    };
-
     // Funzione per caricare i trattamenti
     const loadTreatments = async () => {
         try {
-            const { data: treatments, error } = await supabaseClient
+            const { data: treatments, error } = await supabase
                 .from('treatments')
                 .select('*');
 
@@ -174,10 +179,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const trattamentiTableBody = document.getElementById('trattamenti-table').querySelector('tbody');
             trattamentiTableBody.innerHTML = treatments.map(treatment => `
                 <tr>
-                    <td>${treatment.name}</td>
-                    <td>${treatment.description}</td>
+                    <td>${treatment.name || ''}</td>
+                    <td>${treatment.description || ''}</td>
                     <td>€${(treatment.price || 0).toFixed(2)}</td>
-                    <td><img src="${treatment.image_url}" alt="${treatment.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                    <td>
+                        ${treatment.before_image ? `<img src="${treatment.before_image}" alt="Prima" style="width: 50px; height: 50px; object-fit: cover;">` : ''}
+                    </td>
+                    <td>
+                        ${treatment.after_image ? `<img src="${treatment.after_image}" alt="Dopo" style="width: 50px; height: 50px; object-fit: cover;">` : ''}
+                    </td>
                     <td>
                         <button class="edit-treatment" data-id="${treatment.id}">Modifica</button>
                         <button class="delete-treatment" data-id="${treatment.id}">Elimina</button>
@@ -234,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const { error } = await supabaseClient
+            const { error } = await supabase
                 .from('treatments')
                 .insert([{ name, description, price, image_url }]);
 
@@ -256,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const deleteTreatment = async (id) => {
         try {
             console.log(`Tentativo di eliminazione del trattamento con ID: ${id}`);
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('treatments')
                 .delete()
                 .eq('id', id);
@@ -279,10 +289,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('edit-treatment-name').value = treatment.name;
         document.getElementById('edit-treatment-description').value = treatment.description;
         document.getElementById('edit-treatment-price').value = treatment.price;
-        document.getElementById('edit-treatment-image').value = treatment.image_url;
+        document.getElementById('edit-treatment-before-image').value = treatment.before_image || '';
+        document.getElementById('edit-treatment-after-image').value = treatment.after_image || '';
 
-        // Rendi visibile il modulo di modifica
-        document.getElementById('edit-treatment-section').style.display = 'block';
+        // Mostra il modal di modifica (aggiorna se usi "edit-treatment-modal" o "edit-treatment-section")
+        document.getElementById('edit-treatment-modal').style.display = 'block';
+    };
+
+    // Funzione globale per chiudere il modal di modifica trattamento
+    window.closeEditModal = function() {
+        document.getElementById('edit-treatment-modal').style.display = 'none';
     };
 
     // Funzione per aggiornare un trattamento
@@ -294,18 +310,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const name = document.getElementById('edit-treatment-name').value.trim();
         const description = document.getElementById('edit-treatment-description').value.trim();
         const price = parseFloat(document.getElementById('edit-treatment-price').value) || 0.00;
-        const image_url = document.getElementById('edit-treatment-image').value.trim();
+        const before_image = document.getElementById('edit-treatment-before-image').value.trim();
+        const after_image = document.getElementById('edit-treatment-after-image').value.trim();
 
-        if (!name || !description || !image_url) {
+        if (!name || !description || !before_image || !after_image) {
             alert('Tutti i campi sono obbligatori.');
             return;
         }
 
         try {
             console.log(`Tentativo di aggiornamento del trattamento con ID: ${id}`);
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('treatments')
-                .update({ name, description, price, image_url })
+                .update({ name, description, price, before_image, after_image })
                 .eq('id', id);
 
             if (error) {
@@ -316,11 +333,85 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             console.log('Trattamento aggiornato con successo:', data);
             editTreatmentForm.reset();
-            document.getElementById('edit-treatment-section').style.display = 'none';
+            document.getElementById('edit-treatment-modal').style.display = 'none';
             await loadTreatments();
         } catch (err) {
             console.error('Errore imprevisto durante l\'aggiornamento del trattamento:', err);
         }
+    });
+
+    // Funzione per caricare le disponibilità
+    const loadAvailability = async () => {
+        const disponibilitaTable = document.getElementById('disponibilita-table');
+        if (!disponibilitaTable) return;
+
+        const disponibilitaTableBody = disponibilitaTable.querySelector('tbody');
+        if (!disponibilitaTableBody) return;
+
+        const { data: availability, error } = await supabase
+            .from('availability')
+            .select('*')
+            .order('date', { ascending: true });
+
+        if (error) {
+            console.error('Errore nel caricamento delle disponibilità:', error);
+            return;
+        }
+
+        disponibilitaTableBody.innerHTML = availability.map(item => `
+            <tr>
+                <td>${item.date}</td>
+                <td>${item.time}</td>
+                <td>
+                    <button class="delete-availability" data-id="${item.id}">Elimina</button>
+                </td>
+            </tr>
+        `).join('');
+
+        // Eventi per eliminare disponibilità
+        document.querySelectorAll('.delete-availability').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const id = e.target.getAttribute('data-id');
+                await deleteAvailability(id);
+                await loadAvailability();
+            });
+        });
+    };
+
+    // Funzione per eliminare una disponibilità
+    const deleteAvailability = async (id) => {
+        const { error } = await supabase
+            .from('availability')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Errore durante l\'eliminazione della disponibilità:', error);
+            alert('Errore durante l\'eliminazione della disponibilità');
+        }
+    };
+
+    // Funzione per aggiungere una disponibilità
+    const addAvailabilityForm = document.getElementById('add-availability-form');
+    addAvailabilityForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const date = document.getElementById('availability-date').value;
+        const time = document.getElementById('availability-time').value;
+
+        // Inserisci sempre is_booked: false
+        const { error } = await supabase
+            .from('availability')
+            .insert([{ date, time, is_booked: false }]);
+
+        if (error) {
+            console.error('Errore durante l\'aggiunta della disponibilità:', error);
+            alert('Errore durante l\'aggiunta della disponibilità');
+            return;
+        }
+
+        addAvailabilityForm.reset();
+        await loadAvailability();
     });
 
     // Gestione delle schede con animazione
@@ -345,7 +436,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadClients();
     await loadAppointments();
     await loadTreatments();
-    await populateClientDropdown();
+    await loadAvailability();
     
     const backgroundForm = document.getElementById('background-form');
     const backgroundMessage = document.getElementById('background-message');
@@ -364,7 +455,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // Carica l'immagine su Supabase
             const fileName = `background-${Date.now()}-${file.name}`;
-            const { data, error } = await supabaseClient.storage
+            const { data, error } = await supabase
+                .storage
                 .from('background-images')
                 .upload(fileName, file);
 
@@ -375,7 +467,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Ottieni l'URL pubblico dell'immagine
-            const { publicURL } = supabaseClient.storage
+            const { publicURL } = supabase
+                .storage
                 .from('background-images')
                 .getPublicUrl(fileName);
 
@@ -385,7 +478,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Aggiorna il database con il nuovo URL
-            const { error: dbError } = await supabaseClient
+            const { error: dbError } = await supabase
                 .from('settings')
                 .upsert({ key: 'background_image', value: publicURL });
 

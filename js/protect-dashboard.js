@@ -1,11 +1,11 @@
-import { supabaseClient } from './supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log('Verifica della sessione utente per la dashboard...');
 
         // Ottieni la sessione dell'utente
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error || !session) {
             console.warn('Sessione non valida o utente non autenticato. Reindirizzamento al login.');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const logoutButton = document.getElementById('logout-button');
         if (logoutButton) {
             logoutButton.addEventListener('click', async () => {
-                const { error } = await supabaseClient.auth.signOut();
+                const { error } = await supabase.auth.signOut();
                 if (error) {
                     console.error('Errore durante il logout:', error);
                 } else {
