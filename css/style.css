@@ -1732,7 +1732,7 @@ header {
 }
 
 .navigation img {
-    height: 55px;
+    height: 50px;
     width: auto;
     border-radius: 50%;
     margin-right: 12px;
@@ -1741,7 +1741,7 @@ header {
 
 @media (max-width: 768px) {
     .navigation img {
-        height: 36px;
+        height: 40x;
         margin-right: 8px;
     }
 }
@@ -1765,5 +1765,29 @@ header {
         min-width: 36px;
         min-height: 36px;
         margin-right: 6px;
+    }
+}
+
+.no-dates-message {
+    display: none;
+    font-size: 1.5rem;
+    color: #fff;
+    background: linear-gradient(90deg, #e91e63 0%, #f48585 100%);
+    border: 3px solid #e91e63;
+    border-radius: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1.2rem 0.5rem;
+    box-shadow: 0 4px 16px rgba(233,30,99,0.10);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(233,30,99,0.10);
+    animation: fadeIn 0.7s;
+}
+
+@media (max-width: 600px) {
+    .no-dates-message {
+        font-size: 1.1rem;
+        padding: 0.8rem 0.3rem;
     }
 }
