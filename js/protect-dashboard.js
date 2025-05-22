@@ -1,28 +1,26 @@
 import { supabase } from './supabaseClient.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Controllo immediato della sessione PRIMA che la dashboard venga mostrata
+(async () => {
     const { data: { session }, error } = await supabase.auth.getSession();
 
-    // Se non c'è sessione o errore, logout e redirect
+    // Se non c'è sessione o errore, reindirizza subito (senza signOut, non serve)
     if (!session || error) {
-        await supabase.auth.signOut();
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
         return;
     }
 
-    // Controllo utente valido
-    const user = session.user;
-    if (!user) {
-        await supabase.auth.signOut();
-        window.location.href = 'login.html';
-        return;
-    }
-
-    // Controllo scadenza token
+    // Se la sessione esiste, puoi opzionalmente controllare la scadenza
     const now = Math.floor(Date.now() / 1000);
     if (session.expires_at && session.expires_at < now) {
-        await supabase.auth.signOut();
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
         return;
+    }
+})();
+
+// Listener per cambiamenti di autenticazione (logout da altra tab, scadenza, ecc.)
+supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT' || !session) {
+        window.location.replace('login.html');
     }
 });

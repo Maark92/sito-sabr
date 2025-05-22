@@ -91,6 +91,10 @@ create policy "Authenticated can read treatments"
     on treatments for select
     using (auth.role() = 'authenticated');
 
+create policy "Anyone can read treatments"
+    on treatments for select
+    using (true);
+
 create policy "Authenticated can insert treatments"
     on treatments for insert
     with check (auth.role() = 'authenticated');
