@@ -12,18 +12,18 @@
             <h2>Accesso Dashboard</h2>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" required>
+                <input type="email" id="login-email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" required>
+                <input type="password" id="login-password" required>
             </div>
             <div class="form-group remember-me">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Ricordami</label>
+                <input type="checkbox" id="remember-me" name="remember-me">
+                <label for="remember-me">Ricordami</label>
             </div>
             <button type="submit">Accedi</button>
-            <p id="error-message" class="error-message"></p>
+            <p id="login-error" class="error-message"></p>
             <p><a href="index.html">Torna alla Home</a></p>
         </form>
     </div>
@@ -46,29 +46,19 @@
         // Gestione login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
+            // Non serve più persistSession: false, è già forzato dal client
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
 
-                if (error) throw error;
-
-                // Salva la preferenza "ricordami"
-                if (remember) {
-                    localStorage.setItem('rememberMe', 'true');
-                } else {
-                    localStorage.removeItem('rememberMe');
-                }
-
+            if (error) {
+                document.getElementById('login-error').textContent = 'Credenziali non valide';
+            } else {
                 window.location.href = 'dashboard.html';
-            } catch (error) {
-                console.error('Errore login:', error.message);
-                document.getElementById('error-message').textContent = 'Credenziali non valide';
             }
         });
     </script>

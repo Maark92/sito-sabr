@@ -1,35 +1,37 @@
 import { supabase } from './supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        console.log('Verifica della sessione utente per la dashboard...');
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-        // Ottieni la sessione dell'utente
-        const { data: { session }, error } = await supabase.auth.getSession();
-
-        if (error || !session) {
-            console.warn('Sessione non valida o utente non autenticato. Reindirizzamento al login.');
-            window.location.href = 'login.html';
-            return;
-        }
-
-        console.log('Utente autenticato:', session.user.email);
-
-        // Configura il pulsante di logout
-        const logoutButton = document.getElementById('logout-button');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', async () => {
-                const { error } = await supabase.auth.signOut();
-                if (error) {
-                    console.error('Errore durante il logout:', error);
-                } else {
-                    console.log('Logout effettuato con successo.');
-                    window.location.href = 'login.html';
-                }
-            });
-        }
-    } catch (err) {
-        console.error('Errore durante la verifica dell\'autenticazione:', err);
+    // Se non c'è sessione o errore, logout e redirect
+    if (!session || error) {
+        await supabase.auth.signOut();
         window.location.href = 'login.html';
+        return;
+    }
+
+    // Controllo utente valido
+    const user = session.user;
+    if (!user) {
+        await supabase.auth.signOut();
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // (Opzionale) Controllo email verificata
+    // if (user.email_confirmed_at === null) {
+    //     await supabase.auth.signOut();
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
+
+    // Controllo scadenza token
+    const now = Math.floor(Date.now() / 1000);
+    if (session.expires_at && session.expires_at < now) {
+        await supabase.auth.signOut();
+        window.location.href = 'login.html';
+        return;
     }
 });
+
+// (Evita logout automatico su beforeunload: può causare problemi di race condition)
