@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
- <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Surrogate-Control" content="no-store">
     <title>Dashboard - Sabrina Onicotecnica</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -348,10 +351,15 @@
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', async (e) => {
                         e.preventDefault();
+                        console.log("DASHBOARD.HTML - LOGOUT: Inizio procedura di logout.");
                         try {
                             await supabase.auth.signOut();
-                        } catch (err) {}
-                        window.location.href = 'login.html';
+                            console.log("DASHBOARD.HTML - LOGOUT: supabase.auth.signOut() completato.");
+                        } catch (err) {
+                            console.error("DASHBOARD.HTML - LOGOUT: Errore durante signOut:", err);
+                        }
+                        console.log("DASHBOARD.HTML - LOGOUT: Reindirizzamento a login.html con window.location.replace().");
+                        window.location.replace('login.html');
                     });
                 }
             });

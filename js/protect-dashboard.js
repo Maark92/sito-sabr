@@ -1,26 +1,43 @@
 import { supabase } from './supabaseClient.js';
 
-// Controllo immediato della sessione PRIMA che la dashboard venga mostrata
-(async () => {
-    const { data: { session }, error } = await supabase.auth.getSession();
+const performAuthCheckAndRedirect = async (reason) => {
+    console.log(`Protect-dashboard.js: Inizio controllo autenticazione (${reason})...`);
 
-    // Se non c'è sessione o errore, reindirizza subito (senza signOut, non serve)
-    if (!session || error) {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError) {
+        console.error(`Protect-dashboard.js (${reason}): Errore nel recuperare la sessione:`, sessionError.message);
         window.location.replace('login.html');
-        return;
+        return false;
     }
 
-    // Se la sessione esiste, puoi opzionalmente controllare la scadenza
-    const now = Math.floor(Date.now() / 1000);
-    if (session.expires_at && session.expires_at < now) {
+    if (!session) {
+        console.log(`Protect-dashboard.js (${reason}): Nessuna sessione valida. Reindirizzamento a login.html.`);
         window.location.replace('login.html');
-        return;
+        return false;
     }
-})();
 
-// Listener per cambiamenti di autenticazione (logout da altra tab, scadenza, ecc.)
-supabase.auth.onAuthStateChange((event, session) => {
+    console.log(`Protect-dashboard.js (${reason}): Utente autenticato. Accesso consentito:`, session.user.email);
+    return true;
+};
+
+// Controllo immediato all'esecuzione dello script
+performAuthCheckAndRedirect("initial script execution");
+
+// Listener per cambiamenti di stato dell'autenticazione
+const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    console.log('Protect-dashboard.js: onAuthStateChange event:', event, 'session:', session);
     if (event === 'SIGNED_OUT' || !session) {
+        console.log("Protect-dashboard.js: Evento SIGNED_OUT o sessione nulla da onAuthStateChange. Reindirizzamento.");
         window.location.replace('login.html');
+    }
+});
+
+// Gestione della BFcache (Back/Forward Cache)
+window.addEventListener('pageshow', function(event) {
+    console.log('Protect-dashboard.js: Evento pageshow rilevato.');
+    if (event.persisted) {
+        console.log('Protect-dashboard.js: Pagina ripristinata dalla BFcache. Riesecuzione controllo autenticazione.');
+        performAuthCheckAndRedirect("pageshow - bfcache");
     }
 });
