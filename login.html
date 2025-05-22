@@ -32,16 +32,11 @@
         import { supabase } from './js/supabaseClient.js';
         import { SessionManager } from './js/sessionManager.js';
 
-        // Verifica se già autenticato
-        const checkAuth = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'dashboard.html';
-            }
-        };
+        // Logout automatico ogni volta che si apre la pagina di login
+        await supabase.auth.signOut();
 
-        // Esegui il controllo all'avvio
-        checkAuth();
+        // RIMUOVI IL CONTROLLO checkAuth AUTOMATICO
+        // L'utente deve SEMPRE inserire email e password per accedere
 
         // Gestione login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -49,7 +44,6 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            // Non serve più persistSession: false, è già forzato dal client
             const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password
