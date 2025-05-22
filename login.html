@@ -35,7 +35,7 @@
         // Logout automatico ogni volta che si apre la pagina di login
         await supabase.auth.signOut();
 
-        // RIMUOVI IL CONTROLLO checkAuth AUTOMATICO
+        // NON reindirizzare mai automaticamente alla dashboard se esiste una sessione!
         // L'utente deve SEMPRE inserire email e password per accedere
 
         // Gestione login
