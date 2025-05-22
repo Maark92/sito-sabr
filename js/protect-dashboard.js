@@ -18,13 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // (Opzionale) Controllo email verificata
-    // if (user.email_confirmed_at === null) {
-    //     await supabase.auth.signOut();
-    //     window.location.href = 'login.html';
-    //     return;
-    // }
-
     // Controllo scadenza token
     const now = Math.floor(Date.now() / 1000);
     if (session.expires_at && session.expires_at < now) {
@@ -33,5 +26,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
-
-// (Evita logout automatico su beforeunload: può causare problemi di race condition)

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="module" src="./js/supabaseClient.js"></script>
     <script type="module" src="./js/protect-dashboard.js"></script>
-    <!-- RIMUOVI O COMMENTA eventuali altri script di controllo sessione qui -->
+    <!-- NON aggiungere altri script di controllo sessione qui -->
 </head>
 <body>
     <header class="dashboard-header">
@@ -342,33 +342,17 @@
         <script type="module" src="./js/dashboard.js"></script>
         <script type="module">
             import { supabase } from './js/supabaseClient.js';
-
             document.addEventListener('DOMContentLoaded', () => {
                 const logoutBtn = document.getElementById('logout-button');
                 if (logoutBtn) {
-                    logoutBtn.addEventListener('click', async function(e) {
+                    logoutBtn.addEventListener('click', async (e) => {
                         e.preventDefault();
                         try {
                             await supabase.auth.signOut();
-                        } catch (err) {
-                            // Ignora errori di logout
-                        }
-                        window.location.assign('login.html');
+                        } catch (err) {}
+                        window.location.href = 'login.html';
                     });
                 }
-            });
-        </script>
-        <script type="module">
-            import { supabase } from './js/supabaseClient.js';
-
-            document.getElementById('logout-button').addEventListener('click', async (e) => {
-                e.preventDefault();
-                try {
-                    await supabase.auth.signOut();
-                } catch (err) {
-                    // Ignora errori di logout
-                }
-                window.location.href = 'login.html';
             });
         </script>
     </main>

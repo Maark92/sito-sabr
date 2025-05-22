@@ -30,13 +30,12 @@
 
     <script type="module">
         import { supabase } from './js/supabaseClient.js';
-        import { SessionManager } from './js/sessionManager.js';
 
         // Logout automatico ogni volta che si apre la pagina di login
         await supabase.auth.signOut();
 
-        // NON reindirizzare mai automaticamente alla dashboard se esiste una sessione!
-        // L'utente deve SEMPRE inserire email e password per accedere
+        // RIMUOVI qualsiasi controllo che reindirizza alla dashboard se esiste una sessione!
+        // NON usare checkAuth o simili.
 
         // Gestione login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
