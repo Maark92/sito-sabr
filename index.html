@@ -126,26 +126,27 @@
     <script type="module">
         import { supabase } from './js/supabaseClient.js';
 
-        // Funzione per caricare le date disponibili
+        // Modifica la funzione loadDates
         const loadDates = async () => {
             try {
                 const { data: availability, error } = await supabase
                     .from('availability')
-                    .select('date')
-                    .order('date', { ascending: true }); // Ordiniamo le date
+                    .select('*')
+                    .order('date', { ascending: true });  // Ordina per data crescente
 
                 if (error) {
                     console.error('Errore nel caricamento delle date:', error);
                     return;
                 }
 
-                const uniqueDates = [...new Set(availability.map(item => item.date))];
+                console.log('Date caricate:', availability); // Debug: verifica quante date vengono caricate
+
                 const dateSelect = document.getElementById('date');
                 const noDatesMsg = document.getElementById('no-dates-message');
                 const bookingForm = document.getElementById('booking-form');
 
-                if (uniqueDates.length === 0) {
-                    // Nessuna data disponibile
+                // Rimuovi il filtro delle date duplicate, mostra tutte le date disponibili
+                if (availability.length === 0) {
                     if (dateSelect) dateSelect.innerHTML = `<option value="" disabled selected>Nessuna data disponibile</option>`;
                     if (noDatesMsg) noDatesMsg.style.display = 'block';
                     if (bookingForm) bookingForm.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = true);
@@ -158,16 +159,10 @@
                 if (dateSelect) {
                     dateSelect.innerHTML = `
                         <option value="" disabled selected>Seleziona una data</option>
-                        ${uniqueDates.map(date => `
-                            <option value="${date}">${date}</option>
+                        ${availability.map(item => `
+                            <option value="${item.date}">${item.date}</option>
                         `).join('')}
                     `;
-
-                    // Se c'è una sola data disponibile, selezionala automaticamente
-                    if (uniqueDates.length === 1) {
-                        dateSelect.value = uniqueDates[0];
-                        loadTimesForDate(uniqueDates[0]);
-                    }
                 }
             } catch (err) {
                 console.error('Errore imprevisto durante il caricamento delle date:', err);
