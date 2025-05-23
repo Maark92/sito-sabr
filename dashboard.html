@@ -342,6 +342,29 @@
                     document.getElementById(tab.dataset.tab).classList.add('active');
                 });
             });
+
+            // RIMUOVI questo codice che causa l'errore
+            /*
+            appuntamentiTableBody.innerHTML = appointments.map(appointment => `
+                <tr>
+                    <td>${appointment.client_name || ''}</td>
+                    <td>${appointment.phone || ''}</td>
+                    <td>${formatDate(appointment.date) || ''}</td>
+                    <td>${appointment.time || ''}</td>
+                    <td>${appointment.notes || ''}</td>
+                    <td>
+                        <button class="delete-appointment" data-id="${appointment.id}">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Aggiungi la funzione helper
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                const [year, month, day] = dateStr.split('-');
+                return `${day}-${month}-${year}`;
+            }
+            */
         </script>
         <script type="module" src="./js/dashboard.js"></script>
         <script type="module">

@@ -54,10 +54,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Funzione per caricare gli appuntamenti
     const loadAppointments = async () => {
         const appuntamentiTable = document.getElementById('appuntamenti-table');
-        if (!appuntamentiTable) return; // Evita errori se la tabella non esiste
+        if (!appuntamentiTable) return;
 
         const appuntamentiTableBody = appuntamentiTable.querySelector('tbody');
-        if (!appuntamentiTableBody) return; // Evita errori se tbody non esiste
+        if (!appuntamentiTableBody) return;
 
         const { data: appointments, error } = await supabase
             .from('appointments')
@@ -69,11 +69,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // Funzione helper per formattare la data
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}-${month}-${year}`;
+        }
+
         appuntamentiTableBody.innerHTML = appointments.map(appointment => `
             <tr>
                 <td>${appointment.client_name || ''}</td>
                 <td>${appointment.phone || ''}</td>
-                <td>${appointment.date || ''}</td>
+                <td>${formatDate(appointment.date)}</td>
                 <td>${appointment.time || ''}</td>
                 <td>${appointment.notes || ''}</td>
                 <td>

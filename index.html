@@ -156,11 +156,17 @@
                     if (bookingForm) bookingForm.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = false);
                 }
 
+                // Funzione helper per formattare la data
+                const formatDate = (dateStr) => {
+                    const [year, month, day] = dateStr.split('-');
+                    return `${day}-${month}-${year}`;
+                };
+
                 if (dateSelect) {
                     dateSelect.innerHTML = `
                         <option value="" disabled selected>Seleziona una data</option>
                         ${availability.map(item => `
-                            <option value="${item.date}">${item.date}</option>
+                            <option value="${item.date}">${formatDate(item.date)}</option>
                         `).join('')}
                     `;
                 }
@@ -169,42 +175,48 @@
             }
         };
 
-        // Funzione per caricare gli orari disponibili per una data selezionata
+        // Modifica la funzione loadTimesForDate per filtrare meglio gli orari occupati
         const loadTimesForDate = async (selectedDate) => {
             try {
+                // 1. Carica tutti gli orari disponibili per quella data
                 const { data: availability, error: availabilityError } = await supabase
                     .from('availability')
-                    .select('time')
+                    .select('*')
                     .eq('date', selectedDate)
-                    .order('time', { ascending: true }); // Ordiniamo gli orari
+                    .order('time', { ascending: true });
 
-                if (availabilityError) {
-                    console.error('Errore nel caricamento degli orari disponibili:', availabilityError);
-                    return;
-                }
+                if (availabilityError) throw availabilityError;
 
+                // 2. Carica gli appuntamenti già prenotati per quella data
                 const { data: bookedAppointments, error: appointmentsError } = await supabase
                     .from('appointments')
                     .select('time')
                     .eq('date', selectedDate);
 
-                if (appointmentsError) {
-                    console.error('Errore nel caricamento degli appuntamenti:', appointmentsError);
-                    return;
-                }
+                if (appointmentsError) throw appointmentsError;
 
-                const bookedTimes = bookedAppointments.map(appointment => appointment.time);
-                const filteredTimes = availability.filter(item => !bookedTimes.includes(item.time));
+                // 3. Filtra gli orari già prenotati
+                const bookedTimes = bookedAppointments.map(app => app.time);
+                const availableTimes = availability.filter(slot => !bookedTimes.includes(slot.time));
 
+                // 4. Aggiorna il select degli orari
                 const timeSelect = document.getElementById('time');
                 if (timeSelect) {
-                    timeSelect.innerHTML = filteredTimes.map(item => `
-                        <option value="${item.time}">${item.time}</option>
-                    `).join('');
-                    timeSelect.disabled = false;
+                    if (availableTimes.length === 0) {
+                        timeSelect.innerHTML = '<option value="" disabled selected>Nessun orario disponibile</option>';
+                        timeSelect.disabled = true;
+                    } else {
+                        timeSelect.innerHTML = `
+                            <option value="" disabled selected>Seleziona un orario</option>
+                            ${availableTimes.map(slot => `
+                                <option value="${slot.time}" data-id="${slot.id}">${slot.time}</option>
+                            `).join('')}
+                        `;
+                        timeSelect.disabled = false;
+                    }
                 }
             } catch (err) {
-                console.error('Errore imprevisto durante il caricamento degli orari:', err);
+                console.error('Errore nel caricamento degli orari:', err);
             }
         };
 
@@ -217,36 +229,57 @@
             });
         }
 
-        // Funzione per gestire la prenotazione
+        // Modifica la gestione della prenotazione per eliminare lo slot occupato
         const bookingForm = document.getElementById('booking-form');
         if (bookingForm) {
             bookingForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                const client_name = document.getElementById('name').value;
-                const phone = document.getElementById('phone').value;
-                const date = document.getElementById('date').value;
-                const time = document.getElementById('time').value;
-                const notes = document.getElementById('notes').value;
+                const timeSelect = document.getElementById('time');
+                const selectedOption = timeSelect.options[timeSelect.selectedIndex];
+                const availabilityId = selectedOption.getAttribute('data-id');
 
                 try {
-                    const { error } = await supabase
+                    // 1. Inserisci l'appuntamento
+                    const appointmentData = {
+                        client_name: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value,
+                        date: document.getElementById('date').value,
+                        time: timeSelect.value,
+                        notes: document.getElementById('notes').value
+                    };
+
+                    const { error: appointmentError } = await supabase
                         .from('appointments')
-                        .insert([{ client_name, phone, date, time, notes }]);
+                        .insert([appointmentData]);
 
-                    if (error) {
-                        console.error('Errore durante la prenotazione:', error);
-                        document.getElementById('booking-message').textContent = 'Errore durante la prenotazione. Verifica la connessione o riprova più tardi.';
-                        return;
-                    }
+                    if (appointmentError) throw appointmentError;
 
+                    // 2. Elimina lo slot di disponibilità
+                    const { error: deleteError } = await supabase
+                        .from('availability')
+                        .delete()
+                        .match({ 
+                            id: availabilityId,
+                            date: appointmentData.date,
+                            time: appointmentData.time 
+                        });
+
+                    if (deleteError) throw deleteError;
+
+                    // 3. Feedback e reset
                     bookingForm.reset();
                     document.getElementById('booking-message').textContent = 'Prenotazione effettuata con successo!';
+                    
+                    // 4. Ricarica le date e gli orari
                     await loadDates();
-                    await loadTimesForDate(date);
+                    timeSelect.innerHTML = '<option value="" disabled selected>Seleziona una data prima</option>';
+                    timeSelect.disabled = true;
+
                 } catch (err) {
-                    console.error('Errore imprevisto durante la prenotazione:', err);
-                    document.getElementById('booking-message').textContent = 'Errore di comunicazione con il server. Riprova più tardi.';
+                    console.error('Errore durante la prenotazione:', err);
+                    document.getElementById('booking-message').textContent = 
+                        'Errore durante la prenotazione. Riprova più tardi.';
                 }
             });
         }
