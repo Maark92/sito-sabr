@@ -7,13 +7,18 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "@babel/preset-env": "^7.23.8",
     "@testing-library/jest-dom": "^6.1.5",
-    "@babel/preset-env": "^7.23.8"
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setup.js"
+    ]
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.5.0"
   }
 }
