@@ -15,7 +15,7 @@
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Con Strass o Senza | Onicotecnica Sabrina">
-    <meta property="og:description" content="Trattamenti professionali per unghie a Torino. Prenota online e ricevi il 10% di sconto sul primo appuntamento.">
+    <meta property="og:description" content="Trattamenti professionali per unghie a Valguarnera. Prenota online e ricevi il 10% di sconto sul primo appuntamento.">
     <meta property="og:image" content="https://tuo-dominio.it/images/logo.png">
     <meta property="og:url" content="https://constrassosenza.vercel.app/">
     
@@ -100,7 +100,6 @@
 
     <section id="prenotazioni" class="section">
         <h2><i class="fas fa-calendar-check"></i> Prenota un trattamento</h2>
-        <!-- MESSAGGIO SE NON CI SONO DATE -->
         <div id="no-dates-message" class="no-dates-message" style="display:none;">
             Al momento non ci sono date disponibili per la prenotazione.
         </div>
@@ -126,7 +125,10 @@
             </div>
             <button type="submit"><i class="fas fa-check-circle"></i> Prenota</button>
         </form>
-        <p id="booking-message"></p>
+        <div id="booking-message" class="booking-message" style="display: none;">
+            <span id="booking-message-icon"></span>
+            <p id="booking-message-text"></p>
+        </div>
     </section>
 
     <section id="contatti" class="section">
@@ -270,6 +272,10 @@
 
         // Modifica la gestione della prenotazione per eliminare lo slot occupato
         const bookingForm = document.getElementById('booking-form');
+        const bookingMessage = document.getElementById('booking-message');
+        const bookingMessageIcon = document.getElementById('booking-message-icon');
+        const bookingMessageText = document.getElementById('booking-message-text');
+
         if (bookingForm) {
             bookingForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
@@ -279,7 +285,6 @@
                 const availabilityId = selectedOption.getAttribute('data-id');
 
                 try {
-                    // 1. Inserisci l'appuntamento
                     const appointmentData = {
                         client_name: document.getElementById('name').value,
                         phone: document.getElementById('phone').value,
@@ -294,31 +299,40 @@
 
                     if (appointmentError) throw appointmentError;
 
-                    // 2. Elimina lo slot di disponibilità
                     const { error: deleteError } = await supabase
                         .from('availability')
                         .delete()
-                        .match({ 
+                        .match({
                             id: availabilityId,
                             date: appointmentData.date,
-                            time: appointmentData.time 
+                            time: appointmentData.time
                         });
 
                     if (deleteError) throw deleteError;
 
-                    // 3. Feedback e reset
                     bookingForm.reset();
-                    document.getElementById('booking-message').textContent = 'Prenotazione effettuata con successo!';
-                    
-                    // 4. Ricarica le date e gli orari
+                    bookingMessageIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    bookingMessageText.textContent = 'Prenotazione effettuata con successo!';
+                    bookingMessage.className = 'booking-message success';
+                    bookingMessage.style.display = 'flex';
+
                     await loadDates();
                     timeSelect.innerHTML = '<option value="" disabled selected>Seleziona una data prima</option>';
                     timeSelect.disabled = true;
 
+                    setTimeout(() => {
+                        bookingMessage.style.display = 'none';
+                    }, 5000);
                 } catch (err) {
                     console.error('Errore durante la prenotazione:', err);
-                    document.getElementById('booking-message').textContent = 
-                        'Errore durante la prenotazione. Riprova più tardi.';
+                    bookingMessageIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    bookingMessageText.textContent = 'Errore durante la prenotazione. Riprova più tardi.';
+                    bookingMessage.className = 'booking-message error';
+                    bookingMessage.style.display = 'flex';
+
+                    setTimeout(() => {
+                        bookingMessage.style.display = 'none';
+                    }, 5000);
                 }
             });
         }

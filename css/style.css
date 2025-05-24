@@ -1648,22 +1648,63 @@ nav {
     border: 1px solid #F44336;
 }
 
-/* Responsive adjustments */
+.booking-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 5s ease-in-out;
+}
+
+.booking-message.success {
+    background-color: rgba(76, 175, 80, 0.9);
+    color: white;
+    border: 2px solid #4CAF50;
+}
+
+.booking-message.error {
+    background-color: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: 2px solid #F44336;
+}
+
+.booking-message i {
+    font-size: 1.5rem;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
 @media (max-width: 768px) {
-    .booking-form {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-
-    .booking-form label {
-        font-size: 1rem;
-    }
-
-    .booking-form input,
-    .booking-form select,
-    .booking-form textarea {
-        padding: 10px;
+    .booking-message {
+        width: 90%;
         font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+    .booking-message i {
+        font-size: 1.2rem;
     }
 }
 
