@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard.html
 Disallow: /login.html
 
-Sitemap: https://tuo-dominio.it/sitemap.xml
+Sitemap: https://constrassosenza.vercel.app//sitemap.xml
